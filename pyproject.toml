@@ -1,0 +1,17 @@
+[project]
+name = "open-widget-library"
+version = "0.1.0"
+description = "A widget library for Qt"
+readme = "README.md"
+authors = [
+    { name = "parker", email = "parker@parkerbritt.com" }
+]
+requires-python = ">=3.13"
+dependencies = ["qtpy"]
+
+[project.scripts]
+open-widget-library = "open_widget_library:main"
+
+[build-system]
+requires = ["uv_build>=0.9.9,<0.10.0"]
+build-backend = "uv_build"
