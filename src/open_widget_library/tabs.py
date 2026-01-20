@@ -19,7 +19,7 @@ class Tabs(QtWidgets.QWidget):
 
         self._main_layout.addWidget(self._underline)
 
-        self.anim = QtCore.QPropertyAnimation(self._underline, b"pos")
+        self.anim = QtCore.QPropertyAnimation(self._underline, b"geometry")
         self.anim.setDuration(600)
         self.anim.setEasingCurve(QtCore.QEasingCurve.InOutCubic)
 
@@ -37,11 +37,22 @@ class Tabs(QtWidgets.QWidget):
         self._button_group.addButton(new_button)
         self._button_layout.addWidget(new_button)
 
+        if len(self._button_group.buttons()) == 1:
+            new_button.setChecked(True)
+            QtCore.QTimer.singleShot(0, lambda b=new_button: self._placeUnderline(b))
+
+    def _placeUnderline(self, button):
+        print("placing underline on button")
+        self._underline.setGeometry(button.geometry())
+        self._underline.setFixedWidth(button.width())
+
     def onButtonPressed(self, button):
         if self.anim.state() == QtCore.QAbstractAnimation.Running:
             self.anim.stop()
 
-        self.anim.setStartValue(self._underline.pos())
-        self.anim.setEndValue(button.pos())
+        self.anim.setStartValue(self._underline.geometry())
+        print("cur geo:", self._underline.geometry())
+        self.anim.setEndValue(button.geometry())
+        print("new geo:", button.geometry())
 
         self.anim.start()
