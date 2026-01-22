@@ -14,8 +14,8 @@ class Tabs(QtWidgets.QWidget):
 
         self._underline = QtWidgets.QWidget()
         self._underline.setFixedWidth(200)
-        self._underline.setFixedHeight(50)
-        self._underline.setStyleSheet("QWidget { background: red; }")
+        self._underline.setFixedHeight(2)
+        self._underline.setStyleSheet("QWidget { background: white; }")
 
         self._main_layout.addWidget(self._underline)
 
@@ -30,6 +30,7 @@ class Tabs(QtWidgets.QWidget):
         # {
         #     background: transparent;
         #     border: none;
+        #     color: white;
         # }
         # """)
         new_button.setCheckable(True)
@@ -52,7 +53,8 @@ class Tabs(QtWidgets.QWidget):
 
         self.anim.setStartValue(self._underline.geometry())
         print("cur geo:", self._underline.geometry())
-        self.anim.setEndValue(button.geometry())
+        end = QtCore.QRect(button.x(), button.y()+button.height(), button.width(), button.height())
+        self.anim.setEndValue(end)
         print("new geo:", button.geometry())
 
         self.anim.start()
