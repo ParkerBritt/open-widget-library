@@ -12,27 +12,29 @@ class Tabs(QtWidgets.QWidget):
         self._button_group = QtWidgets.QButtonGroup()
         self._button_group.setExclusive(True)
 
-        self._underline = QtWidgets.QWidget()
-        self._underline.setFixedWidth(200)
+        self._underline = QtWidgets.QWidget(self)
+        # self._underline.setFixedWidth(200)
         self._underline.setFixedHeight(2)
-        self._underline.setStyleSheet("QWidget { background: white; }")
+        self._underline.setStyleSheet("QWidget { background: white; border-radius: 1px; }")
 
-        self._main_layout.addWidget(self._underline)
+        self.underline_geometry_anim = QtCore.QPropertyAnimation(self._underline, b"geometry")
+        self.underline_geometry_anim.setDuration(600)
+        self.underline_geometry_anim.setEasingCurve(QtCore.QEasingCurve.InOutCubic)
 
-        self.anim = QtCore.QPropertyAnimation(self._underline, b"geometry")
-        self.anim.setDuration(600)
-        self.anim.setEasingCurve(QtCore.QEasingCurve.InOutCubic)
+    def resizeEvent(self, e):
+        super().resizeEvent(e)
+        self._place_underline()
 
     def addTab(self, name: str):
         new_button = QtWidgets.QPushButton(name)
-        # new_button.setStyleSheet("""
-        # QPushButton
-        # {
-        #     background: transparent;
-        #     border: none;
-        #     color: white;
-        # }
-        # """)
+        new_button.setStyleSheet("""
+        QPushButton
+        {
+            background: transparent;
+            border: none;
+            color: white;
+        }
+        """)
         new_button.setCheckable(True)
         new_button.clicked.connect(lambda: self.onButtonPressed(new_button))
         self._button_group.addButton(new_button)
@@ -40,21 +42,23 @@ class Tabs(QtWidgets.QWidget):
 
         if len(self._button_group.buttons()) == 1:
             new_button.setChecked(True)
-            QtCore.QTimer.singleShot(0, lambda b=new_button: self._placeUnderline(b))
+            # self._place_underline(new_button)
+            QtCore.QTimer.singleShot(0, self._place_underline)
 
-    def _placeUnderline(self, button):
-        print("placing underline on button")
-        self._underline.setGeometry(button.geometry())
-        self._underline.setFixedWidth(button.width())
+    def _place_underline(self):
+        button = self._button_group.checkedButton()
+
+        end = QtCore.QRect(button.x(), button.y()+button.height(), button.width(), button.height())
+        self._underline.setGeometry(end)
 
     def onButtonPressed(self, button):
-        if self.anim.state() == QtCore.QAbstractAnimation.Running:
-            self.anim.stop()
+        if self.underline_geometry_anim.state() == QtCore.QAbstractAnimation.Running:
+            self.underline_geometry_anim.stop()
 
-        self.anim.setStartValue(self._underline.geometry())
+        self.underline_geometry_anim.setStartValue(self._underline.geometry())
         print("cur geo:", self._underline.geometry())
         end = QtCore.QRect(button.x(), button.y()+button.height(), button.width(), button.height())
-        self.anim.setEndValue(end)
+        self.underline_geometry_anim.setEndValue(end)
         print("new geo:", button.geometry())
 
-        self.anim.start()
+        self.underline_geometry_anim.start()
