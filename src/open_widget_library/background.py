@@ -8,7 +8,7 @@ class Background(QtWidgets.QWidget):
 """
 Background
 {
-    background: #020817;
+    background: #0c0c0c;
     border: 1px solid #1e293b;
 }
 """
