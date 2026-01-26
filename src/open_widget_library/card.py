@@ -10,8 +10,8 @@ class Card(QtWidgets.QWidget):
 """
 Card
 {
-    background: #171717;
-    border: 2px solid #1e293b;
+    background: rgb(23, 23, 23);
+    border: 1px solid rgba(255,255,255, 0.1);
     border-radius: 10px;
 }
 """
