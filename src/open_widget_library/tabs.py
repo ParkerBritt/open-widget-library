@@ -44,6 +44,10 @@ class Tabs(QtWidgets.QWidget):
         {
             background-color: rgb(100,100,100);
         }
+        QPushButton::hover::checked
+        {
+            background-color: transparent;
+        }
         """)
         new_button.setCheckable(True)
         new_button.clicked.connect(lambda: self.onButtonPressed(new_button))
