@@ -1,4 +1,5 @@
 from . import widget_config
+from .widget_config import widget_config
 from qtpy import QtWidgets, QtCore
 
 class Tabs(QtWidgets.QWidget):
@@ -27,6 +28,7 @@ class Tabs(QtWidgets.QWidget):
 
     def addTab(self, name: str):
         new_button = QtWidgets.QPushButton(name)
+        new_button.setIcon(widget_config.get_icon("zap"))
         new_button.setFixedHeight(self._button_height)
         new_button.setStyleSheet("""
         QPushButton
