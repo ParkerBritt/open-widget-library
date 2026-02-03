@@ -1,6 +1,6 @@
 from open_widget_library.dropdown import Dropdown
 from open_widget_library.tabs import Tabs
-from open_widget_library import Background, Card, Spinner
+from open_widget_library import Background, Card, Spinner, widget_config
 from PySide6.QtWidgets import QApplication
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -16,8 +16,8 @@ window.layout().addWidget(Spinner())
 
 tabs = Tabs()
 card.layout().addWidget(tabs)
-tabs.addTab("foo")
-tabs.addTab("bar")
-tabs.addTab("hello")
+tabs.addTab("foo", widget_config.get_icon("zap", "white"), widget_config.get_icon("zap", "black"))
+tabs.addTab("bar", widget_config.get_icon("zap", "white"), widget_config.get_icon("zap", "black"))
+tabs.addTab("hello", widget_config.get_icon("zap", "white"), widget_config.get_icon("zap", "black"))
 window.show()
 app.exec()

@@ -1,6 +1,4 @@
-from . import widget_config
-from .widget_config import widget_config
-from qtpy import QtWidgets, QtCore
+from qtpy import QtWidgets, QtCore, QtGui
 
 class Tabs(QtWidgets.QWidget):
     def __init__(self):
@@ -22,13 +20,26 @@ class Tabs(QtWidgets.QWidget):
         self.underline_geometry_anim.setDuration(300)
         self.underline_geometry_anim.setEasingCurve(QtCore.QEasingCurve.InOutCubic)
 
+        self._icons: list = list()
+        self._icons_selected: list = list()
+
+        self._last_selected_button = None
+
+        self.index_by_button_id = dict()
+
     def resizeEvent(self, e):
         super().resizeEvent(e)
         self._place_underline()
 
-    def addTab(self, name: str):
+    def addTab(self, name: str, icon:QtGui.QIcon=None, selected_icon:QtGui.QIcon=None):
         new_button = QtWidgets.QPushButton(name)
-        new_button.setIcon(widget_config.get_icon("zap"))
+
+        self._icons.append(icon)
+        self._icons_selected.append(selected_icon)
+
+        if(icon):
+            new_button.setIcon(icon)
+
         new_button.setFixedHeight(self._button_height)
         new_button.setStyleSheet("""
         QPushButton
@@ -54,10 +65,16 @@ class Tabs(QtWidgets.QWidget):
         new_button.setCheckable(True)
         new_button.clicked.connect(lambda: self.onButtonPressed(new_button))
         new_button.stackUnder(self._underline)
+
+        button_index = len(self._button_group.buttons())
+
         self._button_group.addButton(new_button)
         self._button_layout.addWidget(new_button)
 
-        if len(self._button_group.buttons()) == 1:
+        button_id = self._button_group.id(new_button)
+        self.index_by_button_id[button_id] = button_index
+
+        if button_index == 0:
             new_button.setChecked(True)
             QtCore.QTimer.singleShot(0, self._place_underline)
 
@@ -79,3 +96,16 @@ class Tabs(QtWidgets.QWidget):
         self.underline_geometry_anim.setEndValue(self._bubble_position_for(button))
 
         self.underline_geometry_anim.start()
+
+        button_id = self._button_group.id(button)
+        index = self.index_by_button_id.get(button_id)
+
+        unselected_icon = self._icons[index]
+        if(self._last_selected_button and unselected_icon):
+            self._last_selected_button.setIcon(unselected_icon)
+
+        selected_icon = self._icons_selected[index]
+        if(selected_icon):
+            button.setIcon(selected_icon)
+
+        self._last_selected_button = button

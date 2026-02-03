@@ -25,15 +25,16 @@ class WidgetConfig():
             1
         )
 
-    def get_icon(self, icon_name):
+    def get_icon(self, icon_name, color:str | None = None):
         icon = self._icons.get(icon_name)
         dir = str(self._ICONS_DIR / f"{icon_name}.svg")
 
         svg = open(dir, encoding="utf-8").read()
 
-        red_svg = self.set_svg_color(svg, "#e11d48")
+        if(color):
+            svg = self.set_svg_color(svg, color)
 
-        renderer = QtSvg.QSvgRenderer(QtCore.QByteArray(red_svg.encode("utf-8")))
+        renderer = QtSvg.QSvgRenderer(QtCore.QByteArray(svg.encode("utf-8")))
 
         if not icon:
             icon = QtGui.QIcon()
