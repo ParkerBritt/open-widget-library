@@ -15,6 +15,7 @@ window.layout().addWidget(card)
 window.layout().addWidget(Spinner())
 
 tabs = Tabs()
+# tabs = Tabs(orientation=QtCore.Qt.Orientation.Vertical)
 card.layout().addWidget(tabs)
 tabs.addTab("foo", widget_config.get_icon("zap", "white"), widget_config.get_icon("zap", "black"))
 tabs.addTab("bar", widget_config.get_icon("zap", "white"), widget_config.get_icon("zap", "black"))

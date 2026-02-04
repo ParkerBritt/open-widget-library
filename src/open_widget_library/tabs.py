@@ -1,11 +1,14 @@
 from qtpy import QtWidgets, QtCore, QtGui
 
 class Tabs(QtWidgets.QWidget):
-    def __init__(self):
-        super().__init__()
-        self._main_layout = QtWidgets.QVBoxLayout(self)
+    def __init__(self, parent=None, orientation:QtCore.Qt.Orientation=QtCore.Qt.Orientation.Horizontal):
+        super().__init__(parent)
+        self._main_layout = QtWidgets.QHBoxLayout(self)
+        if(orientation is QtCore.Qt.Orientation.Horizontal):
+            self._button_layout = QtWidgets.QHBoxLayout()
+        else:
+            self._button_layout = QtWidgets.QVBoxLayout()
 
-        self._button_layout = QtWidgets.QHBoxLayout()
         self._main_layout.addLayout(self._button_layout)
 
         self._button_group = QtWidgets.QButtonGroup()
