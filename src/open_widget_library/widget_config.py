@@ -25,6 +25,25 @@ class WidgetConfig():
             1
         )
 
+    def get_icon_pixmap(self, icon_name, color:str | None = None, scale=16):
+        dir = str(self._ICONS_DIR / f"{icon_name}.svg")
+
+        svg = open(dir, encoding="utf-8").read()
+
+        if(color):
+            svg = self.set_svg_color(svg, color)
+
+        renderer = QtSvg.QSvgRenderer(QtCore.QByteArray(svg.encode("utf-8")))
+
+        pixmap = QtGui.QPixmap(scale, scale)
+        pixmap.fill(QtGui.QColor(0,0,0,0))
+        p = QtGui.QPainter(pixmap)
+        renderer.render(p)
+        p.end()
+
+        return pixmap
+
+
     def get_icon(self, icon_name, color:str | None = None):
         icon = self._icons.get(icon_name)
         dir = str(self._ICONS_DIR / f"{icon_name}.svg")
