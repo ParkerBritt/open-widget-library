@@ -1,4 +1,4 @@
-from qtpy import QtWidgets, QtCore, QtGui
+from qtpy import QtWidgets, QtCore, QtGui, QtSvgWidgets
 
 from . import widget_config
 
@@ -9,13 +9,19 @@ class Icon(QtWidgets.QWidget):
 
         self._normal_pixmap = widget_config.get_icon_pixmap(icon, "white")
         self._selected_pixmap = widget_config.get_icon_pixmap(icon, "black")
+        self._normal_svg = widget_config.get_icon_svg(icon, "white")
+        self._selected_svg = widget_config.get_icon_svg(icon, "black")
 
+        self._icon_svg = QtSvgWidgets.QSvgWidget()
+        self._icon_svg.load(self._normal_svg)
+        self._icon_svg.renderer().setAspectRatioMode(QtCore.Qt.KeepAspectRatio)
         self._icon_label = QtWidgets.QLabel()
         self._icon_label.setPixmap(self._normal_pixmap)
 
         self._main_layout = QtWidgets.QHBoxLayout(self)
         self._main_layout.setContentsMargins(0, 0, 0, 0)
-        self._main_layout.addWidget(self._icon_label)
+        # self._main_layout.addWidget(self._icon_label)
+        self._main_layout.addWidget(self._icon_svg)
 
         self._selected = False
 
@@ -24,3 +30,7 @@ class Icon(QtWidgets.QWidget):
 
         pixmap = self._selected_pixmap if self._selected else self._normal_pixmap
         self._icon_label.setPixmap(pixmap)
+
+        svg = self._selected_svg if self._selected else self._normal_svg
+        self._icon_svg.load(svg)
+        self._icon_svg.renderer().setAspectRatioMode(QtCore.Qt.KeepAspectRatio)
