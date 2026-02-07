@@ -1,18 +1,17 @@
 from qtpy import QtWidgets, QtCore, QtGui
+from .icon import Icon
+
 
 class TabButton(QtWidgets.QPushButton):
-    def __init__(self, name: str, icon:QtGui.QPixmap=None, selected_icon:QtGui.QPixmap=None):
+    def __init__(self, name: str, icon: Icon = None):
         super().__init__()
-        self._icon = icon
-        self._selected_icon = selected_icon
-
         self._label = QtWidgets.QLabel(name)
-        self._icon_label = QtWidgets.QLabel()
-        self._icon_label.setPixmap(self._icon)
+        self._icon = icon
 
         self._main_layout = QtWidgets.QHBoxLayout(self)
         self._main_layout.setAlignment(QtCore.Qt.AlignLeft)
-        self._main_layout.addWidget(self._icon_label)
+        if self._icon:
+            self._main_layout.addWidget(self._icon)
         self._main_layout.addWidget(self._label)
 
         self.toggled.connect(self._on_toggled)
@@ -36,10 +35,8 @@ class TabButton(QtWidgets.QPushButton):
         """)
 
     def _on_toggled(self, state):
-        if(state and self._selected_icon):
-            self._icon_label.setPixmap(self._selected_icon)
-        elif(not state and self._icon):
-            self._icon_label.setPixmap(self._icon)
+        if self._icon:
+            self._icon.set_selected(state)
 
         self._label.setProperty("selected", state)
         self._label.style().unpolish(self._label)
@@ -47,13 +44,12 @@ class TabButton(QtWidgets.QPushButton):
         self._label.update()
 
 
-
 class Tabs(QtWidgets.QWidget):
-    def __init__(self, parent=None, orientation:QtCore.Qt.Orientation=QtCore.Qt.Orientation.Horizontal):
+    def __init__(self, parent=None, orientation: QtCore.Qt.Orientation = QtCore.Qt.Orientation.Horizontal):
         super().__init__(parent)
         self._main_layout = QtWidgets.QHBoxLayout(self)
         self._orientation = orientation
-        if(orientation is QtCore.Qt.Orientation.Horizontal):
+        if orientation is QtCore.Qt.Orientation.Horizontal:
             self._button_layout = QtWidgets.QHBoxLayout()
         else:
             self._button_layout = QtWidgets.QVBoxLayout()
@@ -63,8 +59,8 @@ class Tabs(QtWidgets.QWidget):
 
         self._button_group = QtWidgets.QButtonGroup()
         self._button_group.setExclusive(True)
-        self._button_height = 30;
-        self._button_padding = (0,0,0,0);
+        self._button_height = 30
+        self._button_padding = (0, 0, 0, 0)
 
         self._underline = QtWidgets.QWidget(self)
         self._underline.setStyleSheet("QWidget { background: white; border-radius: 10px; }")
@@ -84,8 +80,8 @@ class Tabs(QtWidgets.QWidget):
         super().resizeEvent(e)
         self._place_underline()
 
-    def addTab(self, name: str, icon:QtGui.QPixmap=None, selected_icon:QtGui.QPixmap=None):
-        new_button = TabButton(name, icon, selected_icon)
+    def addTab(self, name: str, icon: Icon = None):
+        new_button = TabButton(name, icon)
 
         # new_button = QtWidgets.QPushButton()
         #
@@ -143,17 +139,20 @@ class Tabs(QtWidgets.QWidget):
         #
         # new_button.toggled.connect(on_toggled)
 
-
         if button_index == 0:
             new_button.setChecked(True)
             QtCore.QTimer.singleShot(0, self._place_underline)
 
-
     def _underline_position_for(self, button):
-        return QtCore.QRect(button.x(), button.y()+button.height(), button.width(), button.height())
+        return QtCore.QRect(button.x(), button.y() + button.height(), button.width(), button.height())
 
     def _bubble_position_for(self, button):
-        return QtCore.QRect(button.x()-self._button_padding[0], button.y()-self._button_padding[1], button.width()+self._button_padding[2], button.height()+self._button_padding[3]+self._button_padding[1])
+        return QtCore.QRect(
+            button.x() - self._button_padding[0],
+            button.y() - self._button_padding[1],
+            button.width() + self._button_padding[2],
+            button.height() + self._button_padding[3] + self._button_padding[1],
+        )
 
     def _place_underline(self):
         button = self._button_group.checkedButton()
