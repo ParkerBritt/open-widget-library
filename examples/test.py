@@ -21,7 +21,8 @@ tabs.addTab("foo", Icon("zap"))
 tabs.addTab("bar", Icon("zap"))
 tabs.addTab(
     "hello",
-    Icon(file_path=r"/home/parker/Downloads/block.png", file_path_selected=r"/home/parker/Downloads/profile.png"),
+    Icon(file_path=r"/home/parker/Downloads/zap(1).png", file_path_selected=r"/home/parker/Downloads/profile.png"),
+    # Icon(file_path=r"/home/parker/Downloads/block.png", file_path_selected=r"/home/parker/Downloads/profile.png"),
 )
 window.show()
 app.exec()

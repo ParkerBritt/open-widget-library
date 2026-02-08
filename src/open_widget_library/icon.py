@@ -5,6 +5,39 @@ from qtpy import QtWidgets, QtCore, QtGui, QtSvgWidgets
 from . import widget_config
 
 
+class PixmapLabel(QtWidgets.QLabel):
+    def __init__(self, parent=None, pixmap=None):
+        super().__init__(parent)
+        self._pixmap_src = None
+        self.setAlignment(QtCore.Qt.AlignCenter)
+        # self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
+        # self.setStyleSheet("background: red;")
+
+        if pixmap:
+            self.setSourcePixmap(pixmap)
+
+    def setSourcePixmap(self, pixmap: QtGui.QPixmap):
+        self._pixmap_src = pixmap
+        self._update_scaled()
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        self._update_scaled()
+
+    def _update_scaled(self):
+        if not self._pixmap_src or self.width() <= 0 or self.height() <= 0:
+            return
+        size = self.size()
+        max_size = max(size.width(), size.height())
+        scaled = self._pixmap_src.scaled(
+            QtCore.QSize(max_size, max_size),
+            QtCore.Qt.KeepAspectRatio,
+            QtCore.Qt.SmoothTransformation,
+        )
+        print("size", self.size())
+        super().setPixmap(scaled)
+
+
 class Icon(QtWidgets.QWidget):
     class RenderMode(IntEnum):
         SVG = 0
@@ -36,14 +69,12 @@ class Icon(QtWidgets.QWidget):
         elif file_path:
             self._mode = self.RenderMode.PIXMAP
 
-            print("setting normal pixmap for", icon)
             # self._normal_pixmap = widget_config.get_icon_pixmap(icon, "white")
             # self._selected_pixmap = widget_config.get_icon_pixmap(icon, "black")
             self._normal_pixmap = QtGui.QPixmap(file_path)
             self._selected_pixmap = QtGui.QPixmap(file_path_selected or file_path)
 
-            self._icon_pixmap_widget = QtWidgets.QLabel()
-            self._icon_pixmap_widget.setPixmap(self._normal_pixmap)
+            self._icon_pixmap_widget = PixmapLabel(pixmap=self._normal_pixmap)
 
             self._main_layout.addWidget(self._icon_pixmap_widget)
 
@@ -58,4 +89,4 @@ class Icon(QtWidgets.QWidget):
             self._icon_svg_widget.renderer().setAspectRatioMode(QtCore.Qt.KeepAspectRatio)
         elif self._mode is self.RenderMode.PIXMAP:
             pixmap = self._selected_pixmap if self._selected else self._normal_pixmap
-            self._icon_pixmap_widget.setPixmap(pixmap)
+            self._icon_pixmap_widget.setSourcePixmap(pixmap)
