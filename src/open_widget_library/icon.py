@@ -11,7 +11,6 @@ class PixmapLabel(QtWidgets.QLabel):
         self._pixmap_src = None
         self.setAlignment(QtCore.Qt.AlignCenter)
         # self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
-        # self.setStyleSheet("background: red;")
 
         if pixmap:
             self.setSourcePixmap(pixmap)
@@ -38,6 +37,15 @@ class PixmapLabel(QtWidgets.QLabel):
         super().setPixmap(scaled)
 
 
+class SVGWidget(QtSvgWidgets.QSvgWidget):
+    def resizeEvent(self, e):
+        super().resizeEvent(e)
+        side = self.height()
+        if self.minimumWidth() != side or self.maximumWidth() != side:
+            self.setMinimumWidth(side)
+            self.setMaximumWidth(side)
+
+
 class Icon(QtWidgets.QWidget):
     class RenderMode(IntEnum):
         SVG = 0
@@ -54,6 +62,7 @@ class Icon(QtWidgets.QWidget):
         self._main_layout = QtWidgets.QHBoxLayout(self)
         self._main_layout.setContentsMargins(0, 0, 0, 0)
 
+        # self.setStyleSheet("QSvgWidget{ background: red; } QLabel {background: red;}")
         if icon:
             self._mode = self.RenderMode.SVG
 
@@ -61,7 +70,10 @@ class Icon(QtWidgets.QWidget):
             self._normal_svg = widget_config.get_icon_svg(icon, "white")
             self._selected_svg = widget_config.get_icon_svg(icon, "black")
 
-            self._icon_svg_widget = QtSvgWidgets.QSvgWidget()
+            self._icon_svg_widget = SVGWidget()
+            # self._icon_svg_widget.setSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+            print("here size no timer:", self._icon_svg_widget.size())
+            QtCore.QTimer.singleShot(1000, lambda: print("here size:", self._icon_svg_widget.size()))
             self._icon_svg_widget.load(self._normal_svg)
             self._icon_svg_widget.renderer().setAspectRatioMode(QtCore.Qt.KeepAspectRatio)
 

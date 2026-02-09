@@ -18,7 +18,7 @@ window.layout().addWidget(Spinner())
 tabs = Tabs(orientation=QtCore.Qt.Orientation.Vertical)
 card.layout().addWidget(tabs)
 tabs.addTab("foo", Icon("zap"))
-tabs.addTab("bar", Icon("zap"))
+tabs.addTab("bar", Icon("album"))
 tabs.addTab(
     "hello",
     Icon(file_path=r"/home/parker/Downloads/zap(1).png", file_path_selected=r"/home/parker/Downloads/profile.png"),
