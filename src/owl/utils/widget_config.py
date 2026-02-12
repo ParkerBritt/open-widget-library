@@ -7,7 +7,7 @@ border_radius = 10
 class WidgetConfig:
     def __init__(self):
         self._icons = {}
-        self._PACKAGE_ROOT = Path(__file__).resolve().parent
+        self._PACKAGE_ROOT = Path(__file__).resolve().parent.parent
         self._ICONS_DIR = self._PACKAGE_ROOT / "resources" / "icons" / "lucide"
 
     @property

@@ -2,7 +2,7 @@ from enum import IntEnum
 from typing import Optional
 from qtpy import QtWidgets, QtCore, QtGui, QtSvgWidgets
 
-from . import widget_config
+from owl.utils import widget_config
 
 
 class PixmapLabel(QtWidgets.QLabel):
