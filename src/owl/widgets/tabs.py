@@ -9,6 +9,7 @@ class TabButton(QtWidgets.QPushButton):
         self._icon = icon
 
         self._main_layout = QtWidgets.QHBoxLayout(self)
+        self._main_layout.setContentsMargins(0, 0, 0, 0)
         self._main_layout.setAlignment(QtCore.Qt.AlignLeft)
         if self._icon:
             self._main_layout.addWidget(self._icon)
