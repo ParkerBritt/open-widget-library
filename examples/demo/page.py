@@ -7,7 +7,7 @@ app = QApplication()
 window = owl.Background(owl.Color.WINDOW)
 window.setLayout(QtWidgets.QVBoxLayout())
 card = owl.Background()
-# card.setSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Minimum)
+card.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Minimum)
 window.addWidget(card)
 
 # tabs = Tabs()

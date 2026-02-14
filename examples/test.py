@@ -1,16 +1,15 @@
-from open_widget_library.dropdown import Dropdown
-from open_widget_library.tabs import Tabs
-from open_widget_library import Background, Card, Spinner, widget_config, Icon, EllipsisLabel
-from PySide6.QtWidgets import QApplication
-from PySide6 import QtCore, QtGui, QtWidgets
+from owl import Background, Card, Spinner, Icon, EllipsisLabel, CodeBlock, Tabs, Dropdown
+import owl
+from qtpy import QtWidgets, QtCore, QtGui
 
-app = QApplication()
+app = QtWidgets.QApplication()
 
-window = Background()
+window = Background(color=owl.Color.WINDOW)
 window.setLayout(QtWidgets.QVBoxLayout())
-card = Card()
+card = Background()
 card.setLayout(QtWidgets.QVBoxLayout())
 window.layout().addWidget(card)
+window.layout().addWidget(CodeBlock())
 
 window.layout().addWidget(Spinner())
 window.layout().addWidget(EllipsisLabel("Hello world foo bar Hello world foo bar Hello world foo bar "))

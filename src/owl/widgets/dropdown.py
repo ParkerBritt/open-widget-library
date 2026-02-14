@@ -1,5 +1,6 @@
-from . import widget_config
+from ..utils import widget_config
 from qtpy import QtWidgets
+
 
 class Dropdown(QtWidgets.QPushButton):
     def __init__(self):
