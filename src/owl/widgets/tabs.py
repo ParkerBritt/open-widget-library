@@ -5,10 +5,18 @@ from .icon import Icon
 class TabButton(QtWidgets.QPushButton):
     def __init__(self, name: str, icon: Icon = None):
         super().__init__()
-        self._label = QtWidgets.QLabel(name)
+
+        self._name = name
         self._icon = icon
+        self._left_padding = 5
+
+        self._init_layout()
+
+    def _init_layout(self):
+        self._label = QtWidgets.QLabel(self._name)
 
         self._main_layout = QtWidgets.QHBoxLayout(self)
+        self._main_layout.addSpacing(self._left_padding)
         self._main_layout.setContentsMargins(0, 0, 0, 0)
         self._main_layout.setAlignment(QtCore.Qt.AlignLeft)
         if self._icon:
