@@ -28,8 +28,8 @@ class Icon(QtWidgets.QWidget):
         if size is self.Size.DEFAULT:
             # TODO: get default size from widget config
             self._size = 14
-
-        self.setFixedSize(self._size, self._size)
+        if size is not self.Size.FILL:
+            self.setFixedSize(self._size, self._size)
 
         self._main_layout = QtWidgets.QHBoxLayout(self)
         self._main_layout.setContentsMargins(0, 0, 0, 0)
