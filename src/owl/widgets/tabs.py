@@ -46,7 +46,9 @@ class TabButton(QtWidgets.QPushButton):
 
 
 class Tabs(QtWidgets.QWidget):
-    def __init__(self, parent=None, orientation: QtCore.Qt.Orientation = QtCore.Qt.Orientation.Horizontal):
+    def __init__(
+        self, parent=None, orientation: QtCore.Qt.Orientation = QtCore.Qt.Orientation.Horizontal
+    ):
         super().__init__(parent)
         self._main_layout = QtWidgets.QHBoxLayout(self)
         self._orientation = orientation
@@ -145,7 +147,9 @@ class Tabs(QtWidgets.QWidget):
             QtCore.QTimer.singleShot(0, self._place_underline)
 
     def _underline_position_for(self, button):
-        return QtCore.QRect(button.x(), button.y() + button.height(), button.width(), button.height())
+        return QtCore.QRect(
+            button.x(), button.y() + button.height(), button.width(), button.height()
+        )
 
     def _bubble_position_for(self, button):
         return QtCore.QRect(
