@@ -24,8 +24,11 @@ class Icon(QtWidgets.QWidget):
     ):
         super().__init__()
 
-        # TODO: implement default size
-        self._size = 14
+        self._size = size
+        if size is self.Size.DEFAULT:
+            # TODO: get default size from widget config
+            self._size = 14
+
         self.setFixedSize(self._size, self._size)
 
         self._main_layout = QtWidgets.QHBoxLayout(self)
