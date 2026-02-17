@@ -16,7 +16,9 @@ class TabButton(QtWidgets.QPushButton):
         self._label = QtWidgets.QLabel(self._name)
 
         self._main_layout = QtWidgets.QHBoxLayout(self)
-        self._main_layout.addSpacing(self._left_padding)
+        self._spacing_widget = QtWidgets.QWidget()
+        self._spacing_widget.setFixedWidth(self._left_padding)
+        self._main_layout.addWidget(self._spacing_widget)
         self._main_layout.setContentsMargins(0, 0, 0, 0)
         self._main_layout.setAlignment(QtCore.Qt.AlignLeft)
         if self._icon:
@@ -42,6 +44,10 @@ class TabButton(QtWidgets.QPushButton):
             color: black;
         }
         """)
+
+    def set_left_padding(self, padding: int):
+        self._left_padding = padding
+        self._spacing_widget.setFixedWidth(self._left_padding)
 
     def _on_toggled(self, state):
         if self._icon:
