@@ -19,5 +19,11 @@ Background
 }}
 """)
 
-    def addWidget(self, widget):
+    def add_widget(self, widget):
         self._main_layout.addWidget(widget)
+
+    def addWidget(self, widget):
+        self.add_widget(widget)
+
+    def add_layout(self, layout):
+        self._main_layout.addLayout(layout)

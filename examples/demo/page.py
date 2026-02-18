@@ -18,5 +18,19 @@ tabs.addTab("dropdown", owl.Icon("panel-top-open"))
 tabs.addTab("icon", owl.Icon("image"))
 tabs.addTab("spinner", owl.Icon("loader-circle"))
 tabs.addTab("card", owl.Icon("square"))
+tabs.addTab("codeblock", owl.Icon("code"))
+
+stacked_layout = QtWidgets.QStackedLayout()
+card.add_layout(stacked_layout)
+
+stacked_layout.addWidget(QtWidgets.QLabel("Tab"))
+stacked_layout.addWidget(QtWidgets.QLabel("Dropdown"))
+stacked_layout.addWidget(QtWidgets.QLabel("Icon"))
+stacked_layout.addWidget(QtWidgets.QLabel("Spinner"))
+stacked_layout.addWidget(QtWidgets.QLabel("Card"))
+stacked_layout.addWidget(QtWidgets.QLabel("Codeblock"))
+
+tabs.index_changed.connect(lambda index: stacked_layout.setCurrentIndex(index))
+
 window.show()
 app.exec()
