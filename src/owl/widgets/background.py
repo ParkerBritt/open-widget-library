@@ -25,5 +25,9 @@ Background
     def addWidget(self, widget):
         self.add_widget(widget)
 
+    def add_widgets(self, *widgets):
+        for widget in widgets:
+            self.add_widget(widget)
+
     def add_layout(self, layout):
         self._main_layout.addLayout(layout)
