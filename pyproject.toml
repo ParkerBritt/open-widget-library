@@ -10,7 +10,7 @@ requires-python = ">=3.13"
 dependencies = ["qtpy"]
 
 [project.scripts]
-open-widget-library = "owl:main"
+open-widget-library-demo = "owl.examples.demo.page:main"
 
 [build-system]
 requires = ["uv_build>=0.9.9,<0.10.0"]
