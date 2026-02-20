@@ -7,10 +7,10 @@ from .pages import NotificationPage
 def main():
     app = QApplication()
 
-    window = owl.Background(owl.Color.WINDOW)
+    window = owl.Background()
     window.setLayout(QtWidgets.QVBoxLayout())
-    card = owl.Background()
-    card2 = owl.Background()
+    card = owl.Container()
+    card2 = owl.Container()
     card.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Minimum)
     window.add_widgets(card, card2)
 
@@ -26,7 +26,7 @@ def main():
     tabs.addTab("codeblock", owl.Icon("code"))
 
     stacked_layout = QtWidgets.QStackedLayout()
-    card.add_layout(stacked_layout)
+    card2.add_layout(stacked_layout)
 
     stacked_layout.addWidget(NotificationPage())
     stacked_layout.addWidget(QtWidgets.QLabel("Tab"))
