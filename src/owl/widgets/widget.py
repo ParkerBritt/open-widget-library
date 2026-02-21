@@ -4,7 +4,14 @@ from owl.enums import Color
 
 
 class Widget(QtWidgets.QWidget):
-    def __init__(self, direction: QtWidgets.QBoxLayout.Direction=QtWidgets.QBoxLayout.LeftToRight , color=Color.BACKGROUND):
+    # Directions
+    Direction = QtWidgets.QBoxLayout.Direction
+    LeftToRight = Direction.LeftToRight
+    RightToLeft = Direction.RightToLeft
+    TopToBottom = Direction.TopToBottom
+    BottomToTop = Direction.BottomToTop
+
+    def __init__(self, direction: Direction=LeftToRight , color=Color.BACKGROUND):
         super().__init__()
         self._main_layout = QtWidgets.QBoxLayout(direction)
         self.setLayout(self._main_layout)

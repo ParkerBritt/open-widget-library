@@ -11,10 +11,11 @@ class Tabs(QtWidgets.QWidget):
         super().__init__(parent)
         self._main_layout = QtWidgets.QHBoxLayout(self)
         self._orientation = orientation
+        # TODO: convert to box layout same as widget
         if orientation is QtCore.Qt.Orientation.Horizontal:
-            self._button_layout = QtWidgets.QHBoxLayout()
+            self._button_layout = QtWidgets.QHBoxLayout(self)
         else:
-            self._button_layout = QtWidgets.QVBoxLayout()
+            self._button_layout = QtWidgets.QVBoxLayout(self)
             self._button_layout.setAlignment(QtCore.Qt.AlignTop)
 
         self._main_layout.addLayout(self._button_layout)

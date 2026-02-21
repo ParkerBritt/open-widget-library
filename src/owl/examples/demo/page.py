@@ -14,7 +14,6 @@ def main():
     card.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Minimum)
     window.add_widgets(card, card2)
 
-# tabs = Tabs()
     tabs = owl.Tabs(orientation=QtCore.Qt.Orientation.Vertical)
     card.addWidget(tabs)
     tabs.addTab("notification", owl.Icon("chart-area"))
