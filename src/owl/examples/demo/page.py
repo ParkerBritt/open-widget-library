@@ -10,9 +10,8 @@ def main():
     window = owl.Background()
     window.setLayout(QtWidgets.QVBoxLayout())
     card = owl.Container()
+    card.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
     card2 = owl.Container()
-    card.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Minimum)
-    window.add_widgets(card, card2)
 
     tabs = owl.Tabs(orientation=QtCore.Qt.Orientation.Vertical)
     card.addWidget(tabs)
@@ -24,6 +23,7 @@ def main():
     tabs.addTab("card", owl.Icon("square"))
     tabs.addTab("codeblock", owl.Icon("code"))
 
+    window.add_widgets(tabs, card2)
     stacked_layout = QtWidgets.QStackedLayout()
     card2.add_layout(stacked_layout)
 

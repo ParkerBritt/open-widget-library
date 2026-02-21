@@ -7,4 +7,4 @@ class Container(Widget):
         super().__init__()
 
         self.set_margins(0)
-
+        self.layout().setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop)

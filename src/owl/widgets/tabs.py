@@ -9,16 +9,25 @@ class Tabs(QtWidgets.QWidget):
         self, parent=None, orientation: QtCore.Qt.Orientation = QtCore.Qt.Orientation.Horizontal
     ):
         super().__init__(parent)
-        self._main_layout = QtWidgets.QHBoxLayout(self)
+
+        self._icons: list = list()
+        self._icons_selected: list = list()
+        self._last_selected_button = None
+        self._index_by_button_id = dict()
+        self._button_id_count = 0
+        self._largest_button_width = 0
         self._orientation = orientation
+
+        self._init_layout()
+
+
+    def _init_layout(self):
         # TODO: convert to box layout same as widget
-        if orientation is QtCore.Qt.Orientation.Horizontal:
+        if self._orientation is QtCore.Qt.Orientation.Horizontal:
             self._button_layout = QtWidgets.QHBoxLayout(self)
         else:
             self._button_layout = QtWidgets.QVBoxLayout(self)
-            self._button_layout.setAlignment(QtCore.Qt.AlignTop)
-
-        self._main_layout.addLayout(self._button_layout)
+            self._button_layout.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop)
 
         self._button_group = QtWidgets.QButtonGroup()
         self._button_group.setExclusive(True)
@@ -33,14 +42,6 @@ class Tabs(QtWidgets.QWidget):
         self.underline_geometry_anim.setDuration(300)
         self.underline_geometry_anim.setEasingCurve(QtCore.QEasingCurve.InOutCubic)
 
-        self._icons: list = list()
-        self._icons_selected: list = list()
-
-        self._last_selected_button = None
-
-        self._index_by_button_id = dict()
-
-        self._button_id_count = 0
 
     def _on_id_clicked(self, id):
         index = self._index_by_button_id[id]
@@ -53,23 +54,11 @@ class Tabs(QtWidgets.QWidget):
     def addTab(self, name: str, icon: Icon = None) -> int:
         new_button = TabButton(name, icon)
 
-        # new_button = QtWidgets.QPushButton()
-        #
-        # layout = QtWidgets.QHBoxLayout(new_button)
-        # label = QtWidgets.QLabel(name)
-        # label.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
-        # label.setObjectName("tabLabel")
-        # icon_label = QtWidgets.QLabel()
-        # layout.addWidget(icon_label)
-        # layout.addWidget(label)
-        #
-        #
-        # self._icons.append(icon)
-        # self._icons_selected.append(selected_icon)
-        #
-        # if(icon):
-        #     icon_label.setIcon(icon)
-        #
+        button_width = new_button.sizeHint().width()
+        if(self._largest_button_width < button_width):
+            self._largest_button_width = button_width
+            self.setMaximumWidth(self._largest_button_width*2)
+
         new_button.setFixedHeight(self._button_height)
         new_button.setCheckable(True)
         new_button.clicked.connect(lambda: self.onButtonPressed(new_button))
@@ -160,6 +149,12 @@ class TabButton(QtWidgets.QPushButton):
             color: black;
         }
         """)
+
+        self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
+        self.setMinimumWidth(self.sizeHint().width())
+
+    def sizeHint(self):
+        return self._main_layout.sizeHint()
 
     def set_left_padding(self, padding: int):
         self._left_padding = padding
