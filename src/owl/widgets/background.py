@@ -15,6 +15,7 @@ class Background(Widget):
         if not styled:
             return
 
+        self._styled_background = color is Color.WINDOW
         self._color = "#0a0a0a" if color is Color.WINDOW else "#171717"
         self.setAttribute(QtCore.Qt.WA_StyledBackground)
         self.setStyleSheet(f"""
@@ -26,7 +27,8 @@ Background
 }}
 """)
 
-        self._init_graphics_view()
+        if self._styled_background:
+            self._init_graphics_view()
 
     def _make_blurred_sphere(
         self, diameter: int = 200, color: QtGui.QColor = QtGui.QColor("purple")
@@ -57,8 +59,10 @@ Background
 
         self._graphics_view.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self._graphics_view.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self._pixmap_one = self._graphics_scene.addPixmap(self._make_blurred_sphere(diameter=800))
-        self._pixmap_two = self._graphics_scene.addPixmap(self._make_blurred_sphere(diameter=800))
+        self._graphics_view.setFrameStyle(QtWidgets.QFrame.NoFrame)
+
+        self._pixmap_one = self._graphics_scene.addPixmap(self._make_blurred_sphere(diameter=1200))
+        self._pixmap_two = self._graphics_scene.addPixmap(self._make_blurred_sphere(diameter=1200))
         # self._graphics_scene.addEllipse(0, 0, 200, 200, brush=QtGui.QBrush("red"))
 
         self._graphics_view.setScene(self._graphics_scene)
@@ -77,8 +81,10 @@ Background
         # self._stacked_layout.setStackingMode(QtWidgets.QStackedLayout.StackAll)
 
     def resizeEvent(self, event: QtGui.QResizeEvent):
+        if not self._styled_background:
+            return
+
         size = event.size()
-        print(size)
         self._graphics_scene.setSceneRect(0, 0, size.width(), size.height())
         self._graphics_view.setGeometry(0, 0, size.width(), size.height())
 
