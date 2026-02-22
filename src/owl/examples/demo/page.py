@@ -4,11 +4,11 @@ from PySide6 import QtCore, QtGui, QtWidgets
 
 from .pages import NotificationPage
 
+
 def main():
     app = QApplication()
 
     window = owl.Background()
-    window.setLayout(QtWidgets.QVBoxLayout())
     card = owl.Container()
     card.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
     card2 = owl.Container()

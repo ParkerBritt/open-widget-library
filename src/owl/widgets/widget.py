@@ -11,13 +11,19 @@ class Widget(QtWidgets.QWidget):
     TopToBottom = Direction.TopToBottom
     BottomToTop = Direction.BottomToTop
 
-    def __init__(self, direction: Direction=LeftToRight , color=Color.BACKGROUND):
+    def __init__(self, direction: Direction = LeftToRight, color=Color.BACKGROUND):
         super().__init__()
-        self._main_layout = QtWidgets.QBoxLayout(direction)
-        self.setLayout(self._main_layout)
+        self.set_main_layout(QtWidgets.QBoxLayout(direction))
+
+    def set_main_layout(self, layout):
+        self._main_layout = layout
+        super().setLayout(self._main_layout)
+
+    def setLayout(self, layout):
+        self.set_main_layout(layout)
 
     def set_margins(self, margin: int):
-        self._main_layout.setContentsMargins(margin,margin,margin,margin)
+        self._main_layout.setContentsMargins(margin, margin, margin, margin)
 
     def add_widget(self, widget):
         self._main_layout.addWidget(widget)
