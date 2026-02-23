@@ -85,8 +85,12 @@ Background
             return
 
         size = event.size()
-        self._graphics_scene.setSceneRect(0, 0, size.width(), size.height())
-        self._graphics_view.setGeometry(0, 0, size.width(), size.height())
+        border_size = 1
+        view_rect = QtCore.QRect(
+            border_size, border_size, size.width() - border_size, size.height() - border_size
+        )
+        self._graphics_scene.setSceneRect(view_rect)
+        self._graphics_view.setGeometry(view_rect)
 
         tl = self._graphics_view.mapToScene(QtCore.QPoint(0, 0))
         br = self._graphics_view.mapToScene(QtCore.QPoint(size.width() - 1, size.height() - 1))
