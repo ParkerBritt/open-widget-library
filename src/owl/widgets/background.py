@@ -70,7 +70,7 @@ Background
         self._graphics_view.setSizePolicy(
             QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding
         )
-        self._graphics_view.setBackgroundBrush(QtGui.QColor(self._color))
+        self._graphics_view.setBackgroundBrush(QtGui.QColor(0, 0, 0, 0))
 
         content_container = Container()
         content_container.add_layout(self._main_layout)
@@ -91,6 +91,12 @@ Background
         )
         self._graphics_scene.setSceneRect(view_rect)
         self._graphics_view.setGeometry(view_rect)
+        self._graphics_view.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+        self._graphics_view.setStyleSheet("background: transparent;")
+
+        # path = QtGui.QPainterPath()
+
+        self._graphics_view.setGraphicsEffect(RoundedCornerGraphicsEffect(10, self))
 
         tl = self._graphics_view.mapToScene(QtCore.QPoint(0, 0))
         br = self._graphics_view.mapToScene(QtCore.QPoint(size.width() - 1, size.height() - 1))
@@ -103,3 +109,22 @@ Background
 
         # Bottom-right (subtract pixmap size so it fits in the corner)
         self._pixmap_two.setPos(br.x() - r2.width() / 2, br.y() - r2.height() / 2)
+
+
+class RoundedCornerGraphicsEffect(QtWidgets.QGraphicsEffect):
+    def __init__(self, radius: int, parent: QtCore.QObject | None = None):
+        super().__init__(parent)
+        self._radius = radius
+
+    def draw(self, painter: QtGui.QPainter) -> None:
+        offset = QtCore.QPoint()
+        src = self.sourcePixmap(QtCore.Qt.LogicalCoordinates, offset)
+        if src.isNull():
+            return
+
+        painter.setRenderHint(QtGui.QPainter.Antialiasing, True)
+
+        path = QtGui.QPainterPath()
+        path.addRoundedRect(0, 0, src.width(), src.height(), self._radius, self._radius)
+        painter.setClipPath(path, QtCore.Qt.IntersectClip)
+        painter.drawPixmap(offset, src)
