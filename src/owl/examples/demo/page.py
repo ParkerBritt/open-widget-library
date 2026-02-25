@@ -9,6 +9,8 @@ def main():
     app = QApplication()
 
     window = owl.Background()
+    window.setGraphicStyle(window.GraphicStyle.BLURRED_CIRCLES)
+
     card = owl.Container()
     card.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
     card2 = owl.Container()
