@@ -1,4 +1,5 @@
 from qtpy import QtWidgets, QtCore, QtGui
+from .label import Label
 
 
 class ToastNotification(QtWidgets.QWidget):
@@ -7,7 +8,7 @@ class ToastNotification(QtWidgets.QWidget):
         parent: QtWidgets.QWidget,
         text: str,
         margin: int = 1,
-        background_color="#282828",
+        background_color="#151515",
     ):
         super().__init__(parent)
 
@@ -49,21 +50,19 @@ class ToastNotification(QtWidgets.QWidget):
         self._slide_out_animation.setEndValue(self._start_pos)
 
     def _init_layout(self):
-        self._label = QtWidgets.QLabel(self._text)
+        self._label = Label(self._text)
         self._label.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
 
         self._main_layout = QtWidgets.QVBoxLayout(self)
         self._main_layout.setContentsMargins(0, 0, 0, 0)
         self._main_layout.addWidget(self._label)
         self.setAttribute(QtCore.Qt.WA_StyledBackground, True)
-        self.setStyleSheet(
-            f"""
+        self.setStyleSheet(f"""
 ToastNotification {{
     background: {self._background_color};
     border-radius: 8px;
-    border: 1px solid #3d3d3d;
-}}"""
-        )
+    border: 1px solid #2F2F2F;
+}}""")
 
     def _init_timer(self):
         show_timer = QtCore.QTimer(self)
@@ -116,4 +115,3 @@ ToastNotification {{
 
         self._start_pos = QtCore.QPoint(x, start_y)
         self._end_pos = QtCore.QPoint(x, y)
-

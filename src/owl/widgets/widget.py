@@ -20,6 +20,9 @@ class Widget(QtWidgets.QWidget):
     def set_layout_direction(self, direction: QtWidgets.QBoxLayout.Direction):
         self._main_layout.setDirection(direction)
 
+    def add_spacing(self, spacing):
+        self._main_layout.addSpacing(spacing)
+
     def set_main_layout(self, layout):
         self._main_layout = layout
         super().setLayout(self._main_layout)
