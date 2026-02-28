@@ -11,9 +11,14 @@ class Widget(QtWidgets.QWidget):
     TopToBottom = Direction.TopToBottom
     BottomToTop = Direction.BottomToTop
 
-    def __init__(self, direction: Direction = LeftToRight, color=Color.BACKGROUND):
+    def __init__(
+        self, direction: QtWidgets.QBoxLayout.Direction = LeftToRight, color=Color.BACKGROUND
+    ):
         super().__init__()
         self.set_main_layout(QtWidgets.QBoxLayout(direction))
+
+    def set_layout_direction(self, direction: QtWidgets.QBoxLayout.Direction):
+        self._main_layout.setDirection(direction)
 
     def set_main_layout(self, layout):
         self._main_layout = layout

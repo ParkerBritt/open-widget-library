@@ -11,3 +11,4 @@ from .codeblock import CodeBlock
 from .ellipsis_label import EllipsisLabel
 from .widget import Widget
 from .container import Container
+from .label import Label

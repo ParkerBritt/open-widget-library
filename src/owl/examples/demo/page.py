@@ -7,9 +7,10 @@ from .pages import NotificationPage
 
 def main():
     app = QApplication()
+    app.setFont(QtGui.QFont("Open Sans", 10))
 
     window = owl.Background()
-    window.setGraphicStyle(window.GraphicStyle.BLURRED_CIRCLES)
+    # window.setGraphicStyle(window.GraphicStyle.BLURRED_CIRCLES)
 
     card = owl.Container()
     card.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
@@ -27,7 +28,10 @@ def main():
 
     window.add_widgets(tabs, card2)
     stacked_layout = QtWidgets.QStackedLayout()
-    card2.add_layout(stacked_layout)
+
+    page_background = owl.Background(color=owl.Color.WINDOW)
+    card2.add_widget(page_background)
+    page_background.add_layout(stacked_layout)
 
     stacked_layout.addWidget(NotificationPage())
     stacked_layout.addWidget(QtWidgets.QLabel("Tab"))
