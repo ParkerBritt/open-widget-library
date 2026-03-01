@@ -29,9 +29,16 @@ def main():
     window.add_widgets(tabs, card2)
     stacked_layout = QtWidgets.QStackedLayout()
 
+    page_container = owl.Container()
+    page_container.add_layout(stacked_layout)
+    page_container.setMaximumWidth(800)
+
     page_background = owl.Background(color=owl.Color.WINDOW)
+    page_background.add_widget(page_container)
+    page_background.layout.setAlignment(QtCore.Qt.AlignHCenter)
+    page_background.layout.setContentsMargins(30, 40, 30, 30)
+
     card2.add_widget(page_background)
-    page_background.add_layout(stacked_layout)
 
     stacked_layout.addWidget(NotificationPage())
     stacked_layout.addWidget(owl.Button("Tab"))

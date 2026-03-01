@@ -7,7 +7,6 @@ class NotificationPage(owl.Container):
         super().__init__()
         self.set_layout_direction(self.TopToBottom)
         # self.set_size_policy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        # self.setGraphicStyle(self.GraphicStyle.BLURRED_CIRCLES)
 
         self.add_widget(owl.Label("Notification").set_heading(1))
         # self.add_widget(owl.Label("Toast Notification").set_heading(3))
@@ -19,6 +18,11 @@ class NotificationPage(owl.Container):
             lambda: owl.ToastNotification(self.window(), "test").notify()
         )
         self.add_spacing(40)
-        self.add_widget(notification_button)
+        preview_background = owl.Background(color=owl.Color.WINDOW)
+        preview_background.setFixedHeight(250)
+        # preview_background.setGraphicStyle(preview_background.GraphicStyle.BLURRED_CIRCLES)
+        self.add_widget(preview_background)
+
+        preview_background.add_widget(notification_button)
         self.set_alignment(notification_button, QtCore.Qt.AlignHCenter)
         self.add_stretch()
