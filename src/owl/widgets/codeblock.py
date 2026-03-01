@@ -15,9 +15,10 @@ CodeBlock
     color: rgb(220, 220, 220);
 }}
 """)
+        formatted_text = "\n".join([f"{i} {line}" for i, line in enumerate(text.splitlines())])
 
         formatter = HtmlFormatter(noclasses=True, style="dracula", nobackground=True)
-        html = highlight(text, PythonLexer(), formatter)
+        html = highlight(formatted_text, PythonLexer(), formatter)
         print("html", html)
 
         self.setHtml(html)
