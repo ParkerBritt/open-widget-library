@@ -24,5 +24,13 @@ class NotificationPage(owl.Container):
         self.add_widget(preview_background)
 
         preview_background.add_widget(notification_button)
+
+        self.add_widget(owl.CodeBlock("""import owl
+
+notification_button = owl.Button("Test Notify").fill_width(False)
+notification_button.clicked.connect(
+    lambda: owl.ToastNotification(self.window(), "test").notify()
+)
+"""))
         self.set_alignment(notification_button, QtCore.Qt.AlignHCenter)
         self.add_stretch()

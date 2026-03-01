@@ -7,7 +7,7 @@ authors = [
     { name = "parker", email = "parker@parkerbritt.com" }
 ]
 requires-python = ">=3.13"
-dependencies = ["qtpy"]
+dependencies = ["qtpy", "pygments"]
 
 [project.scripts]
 open-widget-library-demo = "owl.examples.demo.page:main"
