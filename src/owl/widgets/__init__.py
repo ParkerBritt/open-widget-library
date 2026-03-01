@@ -14,4 +14,4 @@ from .container import Container
 from .label import Label
 from .button import Button
 from .toast_notification import ToastNotification
-from .code_block import CodeBlock
+from .codeblock import CodeBlock

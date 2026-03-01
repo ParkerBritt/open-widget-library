@@ -1,23 +1,23 @@
-from owl.utils import widget_config
 from qtpy import QtWidgets, QtCore
-from owl.enums import Color
+from pygments import highlight
+from pygments.lexers import PythonLexer
+from pygments.formatters import HtmlFormatter
 
 
-class CodeBlock(QtWidgets.QWidget):
-    def __init__(self):
-        super().__init__()
-        color = "rgb(23, 23, 23)"
-        self._main_layout = QtWidgets.QVBoxLayout()
-        self.setAttribute(QtCore.Qt.WA_StyledBackground)
-        self.setLayout(self._main_layout)
+class CodeBlock(QtWidgets.QTextEdit):
+    def __init__(self, text: str, parent: QtWidgets.QWidget = None):
+        super().__init__(parent)
+
         self.setStyleSheet(f"""
 CodeBlock
 {{
-    background: {color};
-    color: white;
-    border: 1px solid #1e293b;
-    border-radius: 10px;
+    background: transparent;
+    color: rgb(220, 220, 220);
 }}
 """)
 
-        self._main_layout.addWidget(QtWidgets.QLabel("Hello world foo bar"))
+        formatter = HtmlFormatter(noclasses=True, style="dracula", nobackground=True)
+        html = highlight(text, PythonLexer(), formatter)
+        print("html", html)
+
+        self.setHtml(html)
