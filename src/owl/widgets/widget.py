@@ -17,8 +17,24 @@ class Widget(QtWidgets.QWidget):
         super().__init__()
         self.set_main_layout(QtWidgets.QBoxLayout(direction))
 
+    @property
+    def layout(self):
+        return super().layout()
+
     def set_layout_direction(self, direction: QtWidgets.QBoxLayout.Direction):
         self._main_layout.setDirection(direction)
+
+    def add_stretch(self):
+        self.layout.addStretch()
+        return self
+
+    def set_size_policy(self, horizontal, vertical):
+        self.setSizePolicy(horizontal, vertical)
+        return self
+
+    def set_alignment(self, *args, **kwargs):
+        self.layout.setAlignment(*args, **kwargs)
+        return self
 
     def add_spacing(self, spacing):
         self._main_layout.addSpacing(spacing)

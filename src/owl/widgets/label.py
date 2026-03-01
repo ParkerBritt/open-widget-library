@@ -22,6 +22,24 @@ class Label(QtWidgets.QLabel):
         self._apply_style()
         return self
 
+    def set_word_wrap(self, wrap: bool):
+        self.setWordWrap(wrap)
+        return self
+
+    def set_size_policy(self, horizontal, vertical):
+        self.setSizePolicy(horizontal, vertical)
+        return self
+
+    def set_text_block(self, block: bool = True):
+        if block:
+            self.set_word_wrap(True)
+            self.set_size_policy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Maximum)
+        else:
+            self.set_word_wrap(False)
+            self.set_size_policy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+
+        return self
+
     def heading(self) -> int:
         return self._heading
 
@@ -31,7 +49,7 @@ class Label(QtWidgets.QLabel):
         font_weight = style["font-weight"]
         self.setStyleSheet(f"""
 Label {{
-    color: rgba(255, 255, 255, 0.87);
+    color: rgb(220, 220, 220);
     font-size: {font_size}pt;
     font-weight: {font_weight};
 }}

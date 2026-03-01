@@ -34,7 +34,7 @@ def main():
     page_background.add_layout(stacked_layout)
 
     stacked_layout.addWidget(NotificationPage())
-    stacked_layout.addWidget(QtWidgets.QLabel("Tab"))
+    stacked_layout.addWidget(owl.Button("Tab"))
     stacked_layout.addWidget(QtWidgets.QLabel("Dropdown"))
     stacked_layout.addWidget(QtWidgets.QLabel("Icon"))
     stacked_layout.addWidget(QtWidgets.QLabel("Spinner"))

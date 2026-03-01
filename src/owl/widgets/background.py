@@ -26,7 +26,7 @@ class Background(Widget):
 Background
 {{
     background: {self._color};
-    border: 1px solid #1e293b;
+    border: 1px solid #2F2F2F;
     border-radius: 10px;
 }}
 """)
