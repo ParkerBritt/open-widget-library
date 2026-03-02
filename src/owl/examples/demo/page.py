@@ -8,6 +8,7 @@ from .pages import NotificationPage
 class MainWindow(owl.Background):
     def __init__(self):
         super().__init__()
+        self.set_effect(owl.GradientCirclesBackgroundEffect())
         self.init_geometry(scale=0.7)
         self.init_ui()
 
@@ -42,6 +43,8 @@ class MainWindow(owl.Background):
         page_container.setMaximumWidth(800)
 
         page_background = owl.Background(color=owl.Color.WINDOW)
+        page_background.set_effect(owl.GradientCirclesBackgroundEffect())
+
         page_background.add_widget(page_container)
         page_background.layout.setAlignment(QtCore.Qt.AlignHCenter)
         page_background.layout.setContentsMargins(30, 40, 30, 30)
