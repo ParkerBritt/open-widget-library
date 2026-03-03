@@ -16,3 +16,4 @@ from .button import Button
 from .toast_notification import ToastNotification
 from .codeblock import CodeBlock
 from .gradient_circles_background_effect import GradientCirclesBackgroundEffect
+from .dot_matrix_background_effect import DotMatrixBackgroundEffect
