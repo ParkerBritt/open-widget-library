@@ -5,4 +5,4 @@
 </div>
 
 
-OWL is a library of high level python QT widgets for convenience.
+OWL is a library of high level python QT widgets to add functionality in a cohesive style.
