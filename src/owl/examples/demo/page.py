@@ -2,6 +2,8 @@ import owl
 from PySide6.QtWidgets import QApplication
 from PySide6 import QtCore, QtGui, QtWidgets
 
+from owl.examples.demo.pages import notification_page
+
 from .pages import NotificationPage
 
 
@@ -48,10 +50,15 @@ class MainWindow(owl.Background):
         page_background.add_widget(page_container)
         page_background.layout.setAlignment(QtCore.Qt.AlignHCenter)
         page_background.layout.setContentsMargins(30, 40, 30, 30)
+        # page_background.set_effect(owl.GradientCirclesBackgroundEffect())
+        page_background.set_effect(owl.DotMatrixBackgroundEffect())
+        # page_background.set_effect(owl.GridDebugBackgroundEffect())
 
         card2.add_widget(page_background)
 
-        stacked_layout.addWidget(NotificationPage())
+        notification_page = NotificationPage()
+        notification_page.background.set_effect(owl.BackdropBlur(page_background))
+        stacked_layout.addWidget(notification_page)
         stacked_layout.addWidget(owl.Button("Tab"))
         stacked_layout.addWidget(QtWidgets.QLabel("Dropdown"))
         stacked_layout.addWidget(QtWidgets.QLabel("Icon"))

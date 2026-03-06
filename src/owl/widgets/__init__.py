@@ -17,3 +17,5 @@ from .toast_notification import ToastNotification
 from .codeblock import CodeBlock
 from .gradient_circles_background_effect import GradientCirclesBackgroundEffect
 from .dot_matrix_background_effect import DotMatrixBackgroundEffect
+from .backdrop_blur import BackdropBlur
+from .grid_debug_background_effect import GridDebugBackgroundEffect

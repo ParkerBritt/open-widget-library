@@ -33,6 +33,7 @@ Background
         self._background_effect = background_effect
         self._background_effect.setParent(self)
         self._background_effect.show()
+        self._background_effect.lower()
 
     # def _init_graphics_view(self):
     #     self._graphics_view = BackgroundGraphicsView(self)
