@@ -6,10 +6,28 @@ class BackdropBlur(QtWidgets.QWidget):
         super().__init__(background)
         self._background = background
         self._cached: QtGui.QPixmap | None = None
+        self._capture_timer = QtCore.QTimer(self, singleShot=True)
+        self._capture_timer.timeout.connect(self._capture)
 
     def showEvent(self, event):
         super().showEvent(event)
-        QtCore.QTimer.singleShot(0, self._capture)
+        effect = getattr(self._background, "_background_effect", None)
+        if effect is not None:
+            effect.installEventFilter(self)
+        self._background.installEventFilter(self)
+        self._capture_timer.start(0)
+
+    def eventFilter(self, obj, event):
+        effect = getattr(self._background, "_background_effect", None)
+        if obj is effect and event.type() == QtCore.QEvent.Type.Paint:
+            self._capture_timer.start(0)
+        elif obj is self._background and event.type() == QtCore.QEvent.Type.Resize:
+            self._capture_timer.start(0)
+        return super().eventFilter(obj, event)
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        self._capture_timer.start(0)
 
     def _capture(self):
         src = QtGui.QPixmap(self._background.size())
@@ -32,13 +50,15 @@ class BackdropBlur(QtWidgets.QWidget):
         # kernel has real pixels to sample at the edges instead of bleeding black.
         # Clamp to the background bounds so we don't go out of range.
         expanded = QtCore.QRect(
-            pos.x() - radius, pos.y() - radius,
-            self.width() + radius * 2, self.height() + radius * 2,
+            pos.x() - radius,
+            pos.y() - radius,
+            self.width() + radius * 2,
+            self.height() + radius * 2,
         ).intersected(self._background.rect())
 
         blurred = _blur(src.copy(expanded), radius=radius)
 
-        # Crop back to our actual size, accounting for how much we could expand.
+        # Crop back to actual size.
         inner_x = pos.x() - expanded.x()
         inner_y = pos.y() - expanded.y()
         self._cached = blurred.copy(inner_x, inner_y, self.width(), self.height())
