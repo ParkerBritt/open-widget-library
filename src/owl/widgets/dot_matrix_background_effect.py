@@ -15,6 +15,7 @@ class DotMatrixBackgroundEffect(QtWidgets.QWidget):
         self._dot_radius = dot_radius
         self._color = color
         self._time = 0.0
+        self._speed = 0.05
 
         self.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
         self.setAttribute(QtCore.Qt.WA_NoSystemBackground)
@@ -23,8 +24,11 @@ class DotMatrixBackgroundEffect(QtWidgets.QWidget):
         self._timer.timeout.connect(self._tick)
         self._timer.start(16)  # ~60 fps
 
+    def set_speed(speed: float):
+        self._speed = speed
+
     def _tick(self):
-        self._time += 0.05
+        self._time += self._speed
         self.update()
 
     def paintEvent(self, event: QtGui.QPaintEvent):
