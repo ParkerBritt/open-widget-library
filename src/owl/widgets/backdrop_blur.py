@@ -8,6 +8,10 @@ class BackdropBlur(QtWidgets.QWidget):
         self._cached: QtGui.QPixmap | None = None
         self._capture_timer = QtCore.QTimer(self, singleShot=True)
         self._capture_timer.timeout.connect(self._capture)
+        self._blur_radius = 50
+
+    def set_blur_radius(radius: int):
+        self._blur_radius = radius
 
     def showEvent(self, event):
         super().showEvent(event)
@@ -43,20 +47,19 @@ class BackdropBlur(QtWidgets.QWidget):
             )
             painter.end()
 
-        radius = 50
         pos = self.mapTo(self._background, QtCore.QPoint(0, 0))
 
         # Expand capture region by the blur radius on all sides so the blur
         # kernel has real pixels to sample at the edges instead of bleeding black.
         # Clamp to the background bounds so we don't go out of range.
         expanded = QtCore.QRect(
-            pos.x() - radius,
-            pos.y() - radius,
-            self.width() + radius * 2,
-            self.height() + radius * 2,
+            pos.x() - self._blur_radius,
+            pos.y() - self._blur_radius,
+            self.width() + self._blur_radius * 2,
+            self.height() + self._blur_radius * 2,
         ).intersected(self._background.rect())
 
-        blurred = _blur(src.copy(expanded), radius=radius)
+        blurred = _blur(src.copy(expanded), radius=self._blur_radius)
 
         # Crop back to actual size.
         inner_x = pos.x() - expanded.x()
