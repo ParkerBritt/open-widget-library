@@ -1,3 +1,4 @@
+from __future__ import annotations
 from qtpy import QtWidgets, QtCore, QtGui
 
 
@@ -10,8 +11,10 @@ class BackdropBlur(QtWidgets.QWidget):
         self._capture_timer.timeout.connect(self._capture)
         self._blur_radius = 50
 
-    def set_blur_radius(radius: int):
+    def set_blur_radius(self, radius: int) -> BackdropBlur:
         self._blur_radius = radius
+
+        return self
 
     def showEvent(self, event):
         super().showEvent(event)

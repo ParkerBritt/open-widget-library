@@ -57,7 +57,7 @@ class MainWindow(owl.Background):
         card2.add_widget(page_background)
 
         notification_page = NotificationPage()
-        notification_page.background.set_effect(owl.BackdropBlur(page_background))
+        notification_page.background.set_effect(owl.BackdropBlur(page_background).set_blur_radius(6))
         stacked_layout.addWidget(notification_page)
         stacked_layout.addWidget(owl.Button("Tab"))
         stacked_layout.addWidget(QtWidgets.QLabel("Dropdown"))
