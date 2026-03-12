@@ -3,6 +3,8 @@ from qtpy import QtWidgets, QtCore, QtGui
 
 
 class BackdropBlur(QtWidgets.QWidget):
+    _DOWNSCALE = 4
+
     def __init__(self, background: QtWidgets.QWidget):
         super().__init__(background)
         self._background = background
@@ -62,7 +64,21 @@ class BackdropBlur(QtWidgets.QWidget):
             self.height() + self._blur_radius * 2,
         ).intersected(self._background.rect())
 
-        blurred = _blur(src.copy(expanded), radius=self._blur_radius)
+        crop = src.copy(expanded)
+        ds = self._DOWNSCALE
+        small = crop.scaled(
+            crop.width() // ds,
+            crop.height() // ds,
+            QtCore.Qt.AspectRatioMode.IgnoreAspectRatio,
+            QtCore.Qt.TransformationMode.FastTransformation,
+        )
+        blurred = _blur(small, radius=max(self._blur_radius // ds, 1))
+        blurred = blurred.scaled(
+            crop.width(),
+            crop.height(),
+            QtCore.Qt.AspectRatioMode.IgnoreAspectRatio,
+            QtCore.Qt.TransformationMode.SmoothTransformation,
+        )
 
         # Crop back to actual size.
         inner_x = pos.x() - expanded.x()
