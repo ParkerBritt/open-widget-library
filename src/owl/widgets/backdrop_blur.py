@@ -12,6 +12,11 @@ class BackdropBlur(QtWidgets.QWidget):
         self._capture_timer = QtCore.QTimer(self, singleShot=True)
         self._capture_timer.timeout.connect(self._capture)
         self._blur_radius = 50
+        self._max_fps = 10
+
+    def set_max_fps(self, fps: int) -> BackdropBlur:
+        self._max_fps = fps
+        return self
 
     def set_blur_radius(self, radius: int) -> BackdropBlur:
         self._blur_radius = radius
@@ -29,7 +34,8 @@ class BackdropBlur(QtWidgets.QWidget):
     def eventFilter(self, obj, event):
         effect = getattr(self._background, "_background_effect", None)
         if obj is effect and event.type() == QtCore.QEvent.Type.Paint:
-            self._capture_timer.start(0)
+            if not self._capture_timer.isActive():
+                self._capture_timer.start(1000 // self._max_fps)
         elif obj is self._background and event.type() == QtCore.QEvent.Type.Resize:
             self._capture_timer.start(0)
         return super().eventFilter(obj, event)
