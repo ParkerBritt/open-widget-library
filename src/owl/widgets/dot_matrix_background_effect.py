@@ -1,5 +1,5 @@
+from __future__ import annotations
 import math
-
 from qtpy import QtCore, QtGui, QtWidgets
 
 
@@ -16,6 +16,9 @@ class DotMatrixBackgroundEffect(QtWidgets.QWidget):
         self._color = color
         self._time = 0.0
         self._speed = 0.05
+        self._border_radius = 10
+
+        self.setStyleSheet("border-radius: 20px;")
 
         self.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
         self.setAttribute(QtCore.Qt.WA_NoSystemBackground)
@@ -24,6 +27,14 @@ class DotMatrixBackgroundEffect(QtWidgets.QWidget):
         self._timer.timeout.connect(self._tick)
         self._timer.start(16)  # ~60 fps
 
+    def set_border_radius(radius: int) -> DotMatrixBackgroundEffect:
+        self._border_radius
+        self._update_mask
+        return self
+
+    def get_border_radius() -> int:
+        return self._border_radius
+
     def set_speed(speed: float):
         self._speed = speed
 
@@ -31,10 +42,25 @@ class DotMatrixBackgroundEffect(QtWidgets.QWidget):
         self._time += self._speed
         self.update()
 
+    def _update_mask(self):
+        self._clip_path = QtGui.QPainterPath()
+        rect = QtCore.QRectF(self.rect())
+        # TODO: use actual border width
+        rect.adjust(1,1,-1,-1)
+        self._clip_path.addRoundedRect(rect, self._border_radius, self._border_radius,)
+
+    def _apply_mask(self, painter: QtGui.QPainter):
+        painter.setClipPath(self._clip_path)
+
+    def resizeEvent(self, event):
+        if self._border_radius:
+            self._update_mask()
+
     def paintEvent(self, event: QtGui.QPaintEvent):
         painter = QtGui.QPainter(self)
         painter.setRenderHint(QtGui.QPainter.Antialiasing)
         painter.setPen(QtCore.Qt.NoPen)
+        self._apply_mask(painter)
 
         w = self.width()
         h = self.height()

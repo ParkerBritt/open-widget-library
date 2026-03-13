@@ -51,13 +51,11 @@ class MainWindow(owl.Background):
         page_background.layout.setAlignment(QtCore.Qt.AlignHCenter)
         page_background.layout.setContentsMargins(30, 40, 30, 30)
         # page_background.set_effect(owl.GradientCirclesBackgroundEffect())
-        page_background.set_effect(owl.DotMatrixBackgroundEffect())
         # page_background.set_effect(owl.GridDebugBackgroundEffect())
 
         card2.add_widget(page_background)
 
         notification_page = NotificationPage()
-        notification_page.background.set_effect(owl.BackdropBlur(page_background).set_blur_radius(6))
         stacked_layout.addWidget(notification_page)
         stacked_layout.addWidget(owl.Button("Tab"))
         stacked_layout.addWidget(QtWidgets.QLabel("Dropdown"))

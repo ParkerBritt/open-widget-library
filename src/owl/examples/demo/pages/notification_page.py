@@ -22,7 +22,7 @@ class NotificationPage(owl.Container):
         preview_background = owl.Background(color=owl.Color.WINDOW)
         self.background = preview_background
         # preview_background.set_effect(owl.BackdropBlur(notification_button))
-        # preview_background.set_effect(owl.DotMatrixBackgroundEffect())
+        preview_background.set_effect(owl.DotMatrixBackgroundEffect())
         preview_background.setFixedHeight(250)
         # preview_background.setGraphicStyle(preview_background.GraphicStyle.BLURRED_CIRCLES)
         self.add_widget(preview_background)
