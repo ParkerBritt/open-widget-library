@@ -71,7 +71,6 @@ class Tabs(QtWidgets.QWidget):
 
         self._init_layout()
 
-
     def _init_layout(self):
         # TODO: convert to box layout same as widget
         if self._orientation is QtCore.Qt.Orientation.Horizontal:
@@ -92,7 +91,6 @@ class Tabs(QtWidgets.QWidget):
         self.overlay_anim.setDuration(300)
         self.overlay_anim.setEasingCurve(QtCore.QEasingCurve.InOutCubic)
 
-
     def _on_id_clicked(self, id):
         index = self._index_by_button_id[id]
         self.index_changed.emit(index)
@@ -106,9 +104,9 @@ class Tabs(QtWidgets.QWidget):
         new_button = TabButton(name, icon)
 
         button_width = new_button.sizeHint().width()
-        if(self._largest_button_width < button_width):
+        if self._largest_button_width < button_width:
             self._largest_button_width = button_width
-            self.setMaximumWidth(self._largest_button_width*2)
+            self.setMaximumWidth(self._largest_button_width * 2)
 
         new_button.setFixedHeight(self._button_height)
         new_button.setCheckable(True)
@@ -183,7 +181,6 @@ class TabButton(QtWidgets.QPushButton):
             self._main_layout.addWidget(self._icon)
         self._main_layout.addWidget(self._label)
 
-
         self.setStyleSheet("""
         QPushButton
         {
@@ -191,6 +188,10 @@ class TabButton(QtWidgets.QPushButton):
             border: none;
             color: white;
             border-radius: 10px;
+        }
+        QPushButton:hover
+        {
+            background: rgba(255,255,255,0.1);
         }
         QPushButton QLabel
         {
