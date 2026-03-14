@@ -1,6 +1,6 @@
 from enum import IntEnum, auto
 from typing import Optional
-from qtpy import QtWidgets, QtCore, QtGui, QtSvgWidgets
+from qtpy import QtWidgets, QtCore, QtGui, QtSvg, QtSvgWidgets
 
 from owl.utils import widget_config
 
@@ -49,6 +49,7 @@ class Icon(QtWidgets.QWidget):
             )
             self._icon_svg_widget.load(self._normal_svg)
             self._icon_svg_widget.renderer().setAspectRatioMode(QtCore.Qt.KeepAspectRatio)
+            self._selected_renderer = QtSvg.QSvgRenderer(self._selected_svg)
 
             self._main_layout.addWidget(self._icon_svg_widget)
         elif file_path:
@@ -79,6 +80,15 @@ class Icon(QtWidgets.QWidget):
         elif self._mode is self.RenderMode.PIXMAP:
             pixmap = self._selected_pixmap if self._selected else self._normal_pixmap
             self._icon_pixmap_widget.setSourcePixmap(pixmap)
+
+    def render_selected(self, painter: QtGui.QPainter, rect: QtCore.QRect):
+        if self._mode is self.RenderMode.SVG:
+            self._selected_renderer.render(painter, QtCore.QRectF(rect))
+        elif self._mode is self.RenderMode.PIXMAP:
+            scaled = self._selected_pixmap.scaled(
+                rect.size(), QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation
+            )
+            painter.drawPixmap(rect, scaled)
 
 
 class PixmapLabel(QtWidgets.QLabel):

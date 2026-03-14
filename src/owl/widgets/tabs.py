@@ -2,6 +2,57 @@ from qtpy import QtWidgets, QtCore, QtGui
 from .icon import Icon
 
 
+class TabOverlay(QtWidgets.QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self._bubble_rect = QtCore.QRect()
+        self._buttons = []
+        self.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
+        self.setAttribute(QtCore.Qt.WA_NoSystemBackground)
+        self.setAutoFillBackground(False)
+
+    @QtCore.Property(QtCore.QRect)
+    def bubbleRect(self):
+        return self._bubble_rect
+
+    @bubbleRect.setter
+    def bubbleRect(self, rect):
+        self._bubble_rect = rect
+        self.update()
+
+    def set_buttons(self, buttons):
+        self._buttons = buttons
+
+    def paintEvent(self, event):
+        if self._bubble_rect.isEmpty():
+            return
+        painter = QtGui.QPainter(self)
+        painter.setRenderHint(QtGui.QPainter.Antialiasing)
+
+        path = QtGui.QPainterPath()
+        path.addRoundedRect(QtCore.QRectF(self._bubble_rect), 10, 10)
+        painter.setClipPath(path)
+
+        painter.setBrush(QtGui.QColor("white"))
+        painter.setPen(QtCore.Qt.NoPen)
+        painter.drawRoundedRect(QtCore.QRectF(self._bubble_rect), 10, 10)
+
+        painter.setPen(QtGui.QColor("black"))
+        for button in self._buttons:
+            if button._icon:
+                icon = button._icon
+                icon_pos = icon.mapTo(self.parent(), QtCore.QPoint(0, 0))
+                button._icon.render_selected(painter, QtCore.QRect(icon_pos, icon.size()))
+
+            label = button._label
+            label_pos = label.mapTo(self.parent(), QtCore.QPoint(0, 0))
+            label_rect = QtCore.QRect(label_pos, label.size())
+            painter.setFont(label.font())
+            painter.drawText(label_rect, QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter, label.text())
+
+        painter.end()
+
+
 class Tabs(QtWidgets.QWidget):
     index_changed = QtCore.Signal(int)
 
@@ -35,12 +86,11 @@ class Tabs(QtWidgets.QWidget):
         self._button_padding = (0, 0, 0, 0)
         self._button_group.idClicked.connect(self._on_id_clicked)
 
-        self._underline = QtWidgets.QWidget(self)
-        self._underline.setStyleSheet("QWidget { background: white; border-radius: 10px; }")
+        self._overlay = TabOverlay(self)
 
-        self.underline_geometry_anim = QtCore.QPropertyAnimation(self._underline, b"geometry")
-        self.underline_geometry_anim.setDuration(300)
-        self.underline_geometry_anim.setEasingCurve(QtCore.QEasingCurve.InOutCubic)
+        self.overlay_anim = QtCore.QPropertyAnimation(self._overlay, b"bubbleRect")
+        self.overlay_anim.setDuration(300)
+        self.overlay_anim.setEasingCurve(QtCore.QEasingCurve.InOutCubic)
 
 
     def _on_id_clicked(self, id):
@@ -49,6 +99,7 @@ class Tabs(QtWidgets.QWidget):
 
     def resizeEvent(self, e):
         super().resizeEvent(e)
+        self._overlay.setGeometry(self.rect())
         self._place_underline()
 
     def addTab(self, name: str, icon: Icon = None) -> int:
@@ -62,7 +113,6 @@ class Tabs(QtWidgets.QWidget):
         new_button.setFixedHeight(self._button_height)
         new_button.setCheckable(True)
         new_button.clicked.connect(lambda: self.onButtonPressed(new_button))
-        new_button.stackUnder(self._underline)
 
         button_index = len(self._button_group.buttons())
 
@@ -71,6 +121,9 @@ class Tabs(QtWidgets.QWidget):
 
         button_id = self._button_group.id(new_button)
         self._index_by_button_id[button_id] = button_index
+
+        self._overlay.set_buttons(self._button_group.buttons())
+        self._overlay.raise_()
 
         if button_index == 0:
             new_button.setChecked(True)
@@ -93,16 +146,16 @@ class Tabs(QtWidgets.QWidget):
 
     def _place_underline(self):
         button = self._button_group.checkedButton()
-        self._underline.setGeometry(self._bubble_position_for(button))
+        self._overlay.bubbleRect = self._bubble_position_for(button)
 
     def onButtonPressed(self, button):
-        if self.underline_geometry_anim.state() == QtCore.QAbstractAnimation.Running:
-            self.underline_geometry_anim.stop()
+        if self.overlay_anim.state() == QtCore.QAbstractAnimation.Running:
+            self.overlay_anim.stop()
 
-        self.underline_geometry_anim.setStartValue(self._underline.geometry())
-        self.underline_geometry_anim.setEndValue(self._bubble_position_for(button))
+        self.overlay_anim.setStartValue(self._overlay.bubbleRect)
+        self.overlay_anim.setEndValue(self._bubble_position_for(button))
 
-        self.underline_geometry_anim.start()
+        self.overlay_anim.start()
 
         self._last_selected_button = button
 
@@ -130,7 +183,6 @@ class TabButton(QtWidgets.QPushButton):
             self._main_layout.addWidget(self._icon)
         self._main_layout.addWidget(self._label)
 
-        self.toggled.connect(self._on_toggled)
 
         self.setStyleSheet("""
         QPushButton
@@ -144,10 +196,6 @@ class TabButton(QtWidgets.QPushButton):
         {
             color: white;
         }
-        QPushButton QLabel[selected="true"]
-        {
-            color: black;
-        }
         """)
 
         self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
@@ -159,12 +207,3 @@ class TabButton(QtWidgets.QPushButton):
     def set_left_padding(self, padding: int):
         self._left_padding = padding
         self._spacing_widget.setFixedWidth(self._left_padding)
-
-    def _on_toggled(self, state):
-        if self._icon:
-            self._icon.set_selected(state)
-
-        self._label.setProperty("selected", state)
-        self._label.style().unpolish(self._label)
-        self._label.style().polish(self._label)
-        self._label.update()
