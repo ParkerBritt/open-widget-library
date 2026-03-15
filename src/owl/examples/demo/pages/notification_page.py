@@ -14,27 +14,38 @@ class NotificationPage(owl.Container):
         self.add_spacing(10)
         self.add_widget(owl.Label(owl.lorem_ipsum(2)).set_text_block())
 
-        notification_button = owl.Button("Test Notify").fill_width(False)
-        notification_button.clicked.connect(
-            lambda: owl.ToastNotification(self.window(), "test").notify()
-        )
         self.add_spacing(40)
+
+        tabs = owl.Tabs()
+        tabs.add_tab("Preview")
+        tabs.add_tab("Code")
+        self.add_widget(tabs)
+
+
         preview_background = owl.Background(color=owl.Color.WINDOW)
         self.background = preview_background
         # preview_background.set_effect(owl.BackdropBlur(notification_button))
         preview_background.set_effect(owl.DotMatrixBackgroundEffect())
         preview_background.setFixedHeight(250)
         # preview_background.setGraphicStyle(preview_background.GraphicStyle.BLURRED_CIRCLES)
-        self.add_widget(preview_background)
 
-        preview_background.add_widget(notification_button)
-
-        self.add_widget(owl.CodeBlock("""import owl
+        stacked_layout = QtWidgets.QStackedLayout()
+        stacked_layout.addWidget(preview_background)
+        stacked_layout.addWidget(owl.CodeBlock("""import owl
 
 notification_button = owl.Button("Test Notify").fill_width(False)
 notification_button.clicked.connect(
     lambda: owl.ToastNotification(self.window(), "test").notify()
 )
 """))
+        self.add_layout(stacked_layout)
+        tabs.index_changed.connect(lambda index: stacked_layout.setCurrentIndex(index))
+
+        notification_button = owl.Button("Test Notify").fill_width(False)
+        notification_button.clicked.connect(
+            lambda: owl.ToastNotification(self.window(), "test").notify()
+        )
+        preview_background.add_widget(notification_button)
+
         self.set_alignment(notification_button, QtCore.Qt.AlignHCenter)
         self.add_stretch()

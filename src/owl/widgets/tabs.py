@@ -75,10 +75,12 @@ class Tabs(QtWidgets.QWidget):
         # TODO: convert to box layout same as widget
         if self._orientation is QtCore.Qt.Orientation.Horizontal:
             self._button_layout = QtWidgets.QHBoxLayout(self)
+            self._button_layout.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop)
         else:
             self._button_layout = QtWidgets.QVBoxLayout(self)
             self._button_layout.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop)
 
+        self._button_layout.setContentsMargins(0, 0, 0, 0)
         self._button_group = QtWidgets.QButtonGroup()
         self._button_group.setExclusive(True)
         self._button_height = 30
@@ -100,13 +102,16 @@ class Tabs(QtWidgets.QWidget):
         self._overlay.setGeometry(self.rect())
         self._place_underline()
 
-    def addTab(self, name: str, icon: Icon = None) -> int:
+    def add_tab(self, name: str, icon: Icon = None) -> int:
         new_button = TabButton(name, icon)
 
-        button_width = new_button.sizeHint().width()
-        if self._largest_button_width < button_width:
-            self._largest_button_width = button_width
-            self.setMaximumWidth(self._largest_button_width * 2)
+        if self._orientation is QtCore.Qt.Orientation.Vertical:
+            button_width = new_button.sizeHint().width()
+            if self._largest_button_width < button_width:
+                self._largest_button_width = button_width
+                self.setMaximumWidth(self._largest_button_width * 2)
+        else:
+            new_button.setSizePolicy(QtWidgets.QSizePolicy.Maximum,QtWidgets.QSizePolicy.Maximum)
 
         new_button.setFixedHeight(self._button_height)
         new_button.setCheckable(True)
@@ -165,6 +170,7 @@ class TabButton(QtWidgets.QPushButton):
         self._name = name
         self._icon = icon
         self._left_padding = 5
+        self._right_padding = 5
 
         self._init_layout()
 
@@ -172,14 +178,17 @@ class TabButton(QtWidgets.QPushButton):
         self._label = QtWidgets.QLabel(self._name)
 
         self._main_layout = QtWidgets.QHBoxLayout(self)
-        self._spacing_widget = QtWidgets.QWidget()
-        self._spacing_widget.setFixedWidth(self._left_padding)
-        self._main_layout.addWidget(self._spacing_widget)
+        self._left_spacing_widget = QtWidgets.QWidget()
+        self._left_spacing_widget.setFixedWidth(self._left_padding)
+        self._main_layout.addWidget(self._left_spacing_widget)
         self._main_layout.setContentsMargins(0, 0, 0, 0)
         self._main_layout.setAlignment(QtCore.Qt.AlignLeft)
         if self._icon:
             self._main_layout.addWidget(self._icon)
         self._main_layout.addWidget(self._label)
+        self._right_spacing_widget = QtWidgets.QWidget()
+        self._right_spacing_widget.setFixedWidth(self._right_padding)
+        self._main_layout.addWidget(self._right_spacing_widget)
 
         self.setStyleSheet("""
         QPushButton
@@ -207,4 +216,4 @@ class TabButton(QtWidgets.QPushButton):
 
     def set_left_padding(self, padding: int):
         self._left_padding = padding
-        self._spacing_widget.setFixedWidth(self._left_padding)
+        self._left_spacing_widget.setFixedWidth(self._left_padding)
