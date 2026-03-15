@@ -3,6 +3,7 @@ from qtpy import QtWidgets, QtCore, QtGui
 from .icon import Icon
 
 
+BORDER_RADIUS = 8
 
 class Tabs(QtWidgets.QWidget):
     index_changed = QtCore.Signal(int)
@@ -139,22 +140,22 @@ class TabButton(QtWidgets.QPushButton):
         self._right_spacing_widget.setFixedWidth(self._right_padding)
         self._main_layout.addWidget(self._right_spacing_widget)
 
-        self.setStyleSheet("""
+        self.setStyleSheet(f"""
         QPushButton
-        {
+        {{
             background: transparent;
             border: none;
             color: white;
-            border-radius: 8px;
-        }
+            border-radius: {BORDER_RADIUS}px;
+        }}
         QPushButton:hover
-        {
+        {{
             background: rgba(255,255,255,0.1);
-        }
+        }}
         QPushButton QLabel
-        {
+        {{
             color: white;
-        }
+        }}
         """)
 
         self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
@@ -195,12 +196,12 @@ class TabOverlay(QtWidgets.QWidget):
         painter.setRenderHint(QtGui.QPainter.Antialiasing)
 
         path = QtGui.QPainterPath()
-        path.addRoundedRect(QtCore.QRectF(self._bubble_rect), 10, 10)
+        path.addRoundedRect(QtCore.QRectF(self._bubble_rect), BORDER_RADIUS, BORDER_RADIUS)
         painter.setClipPath(path)
 
         painter.setBrush(QtGui.QColor("white"))
         painter.setPen(QtCore.Qt.NoPen)
-        painter.drawRoundedRect(QtCore.QRectF(self._bubble_rect), 10, 10)
+        painter.drawRoundedRect(QtCore.QRectF(self._bubble_rect), BORDER_RADIUS, BORDER_RADIUS)
 
         painter.setPen(QtGui.QColor("black"))
         for button in self._buttons:
