@@ -35,6 +35,8 @@ Background
         self._background_effect.show()
         self._background_effect.lower()
 
+        return self
+
     # def _init_graphics_view(self):
     #     self._graphics_view = BackgroundGraphicsView(self)
     #

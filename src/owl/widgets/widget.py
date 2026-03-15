@@ -51,13 +51,16 @@ class Widget(QtWidgets.QWidget):
 
     def add_widget(self, widget):
         self._main_layout.addWidget(widget)
+        return self
 
     def addWidget(self, widget):
-        self.add_widget(widget)
+        return self.add_widget(widget)
 
     def add_widgets(self, *widgets):
         for widget in widgets:
             self.add_widget(widget)
+        return self
 
     def add_layout(self, layout):
         self._main_layout.addLayout(layout)
+        return self

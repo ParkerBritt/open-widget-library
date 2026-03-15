@@ -1,56 +1,7 @@
+from __future__ import annotations
 from qtpy import QtWidgets, QtCore, QtGui
 from .icon import Icon
 
-
-class TabOverlay(QtWidgets.QWidget):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self._bubble_rect = QtCore.QRect()
-        self._buttons = []
-        self.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
-        self.setAttribute(QtCore.Qt.WA_NoSystemBackground)
-        self.setAutoFillBackground(False)
-
-    @QtCore.Property(QtCore.QRect)
-    def bubbleRect(self):
-        return self._bubble_rect
-
-    @bubbleRect.setter
-    def bubbleRect(self, rect):
-        self._bubble_rect = rect
-        self.update()
-
-    def set_buttons(self, buttons):
-        self._buttons = buttons
-
-    def paintEvent(self, event):
-        if self._bubble_rect.isEmpty():
-            return
-        painter = QtGui.QPainter(self)
-        painter.setRenderHint(QtGui.QPainter.Antialiasing)
-
-        path = QtGui.QPainterPath()
-        path.addRoundedRect(QtCore.QRectF(self._bubble_rect), 10, 10)
-        painter.setClipPath(path)
-
-        painter.setBrush(QtGui.QColor("white"))
-        painter.setPen(QtCore.Qt.NoPen)
-        painter.drawRoundedRect(QtCore.QRectF(self._bubble_rect), 10, 10)
-
-        painter.setPen(QtGui.QColor("black"))
-        for button in self._buttons:
-            if button._icon:
-                icon = button._icon
-                icon_pos = icon.mapTo(self.parent(), QtCore.QPoint(0, 0))
-                button._icon.render_selected(painter, QtCore.QRect(icon_pos, icon.size()))
-
-            label = button._label
-            label_pos = label.mapTo(self.parent(), QtCore.QPoint(0, 0))
-            label_rect = QtCore.QRect(label_pos, label.size())
-            painter.setFont(label.font())
-            painter.drawText(label_rect, QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter, label.text())
-
-        painter.end()
 
 
 class Tabs(QtWidgets.QWidget):
@@ -83,7 +34,6 @@ class Tabs(QtWidgets.QWidget):
         self._button_layout.setContentsMargins(0, 0, 0, 0)
         self._button_group = QtWidgets.QButtonGroup()
         self._button_group.setExclusive(True)
-        self._button_height = 30
         self._button_padding = (0, 0, 0, 0)
         self._button_group.idClicked.connect(self._on_id_clicked)
 
@@ -113,7 +63,6 @@ class Tabs(QtWidgets.QWidget):
         else:
             new_button.setSizePolicy(QtWidgets.QSizePolicy.Maximum,QtWidgets.QSizePolicy.Maximum)
 
-        new_button.setFixedHeight(self._button_height)
         new_button.setCheckable(True)
         new_button.clicked.connect(lambda: self.onButtonPressed(new_button))
 
@@ -181,7 +130,7 @@ class TabButton(QtWidgets.QPushButton):
         self._left_spacing_widget = QtWidgets.QWidget()
         self._left_spacing_widget.setFixedWidth(self._left_padding)
         self._main_layout.addWidget(self._left_spacing_widget)
-        self._main_layout.setContentsMargins(0, 0, 0, 0)
+        self._main_layout.setContentsMargins(0, 4, 0, 4)
         self._main_layout.setAlignment(QtCore.Qt.AlignLeft)
         if self._icon:
             self._main_layout.addWidget(self._icon)
@@ -196,7 +145,7 @@ class TabButton(QtWidgets.QPushButton):
             background: transparent;
             border: none;
             color: white;
-            border-radius: 10px;
+            border-radius: 8px;
         }
         QPushButton:hover
         {
@@ -217,3 +166,53 @@ class TabButton(QtWidgets.QPushButton):
     def set_left_padding(self, padding: int):
         self._left_padding = padding
         self._left_spacing_widget.setFixedWidth(self._left_padding)
+
+class TabOverlay(QtWidgets.QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self._bubble_rect = QtCore.QRect()
+        self._buttons = []
+        self.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
+        self.setAttribute(QtCore.Qt.WA_NoSystemBackground)
+        self.setAutoFillBackground(False)
+
+    @QtCore.Property(QtCore.QRect)
+    def bubbleRect(self):
+        return self._bubble_rect
+
+    @bubbleRect.setter
+    def bubbleRect(self, rect):
+        self._bubble_rect = rect
+        self.update()
+
+    def set_buttons(self, buttons):
+        self._buttons = buttons
+
+    def paintEvent(self, event):
+        if self._bubble_rect.isEmpty():
+            return
+        painter = QtGui.QPainter(self)
+        painter.setRenderHint(QtGui.QPainter.Antialiasing)
+
+        path = QtGui.QPainterPath()
+        path.addRoundedRect(QtCore.QRectF(self._bubble_rect), 10, 10)
+        painter.setClipPath(path)
+
+        painter.setBrush(QtGui.QColor("white"))
+        painter.setPen(QtCore.Qt.NoPen)
+        painter.drawRoundedRect(QtCore.QRectF(self._bubble_rect), 10, 10)
+
+        painter.setPen(QtGui.QColor("black"))
+        for button in self._buttons:
+            if button._icon:
+                icon = button._icon
+                icon_pos = icon.mapTo(self.parent(), QtCore.QPoint(0, 0))
+                button._icon.render_selected(painter, QtCore.QRect(icon_pos, icon.size()))
+
+            label = button._label
+            label_pos = label.mapTo(self.parent(), QtCore.QPoint(0, 0))
+            label_rect = QtCore.QRect(label_pos, label.size())
+            painter.setFont(label.font())
+            painter.drawText(label_rect, QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter, label.text())
+
+        painter.end()
