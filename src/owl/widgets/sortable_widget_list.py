@@ -87,13 +87,12 @@ class SortableWidgetList(QtWidgets.QWidget):
             return
 
         old_index = self._main_layout.indexOf(self._selected_widget)
-        new_index = old_index + len([
-            w for w in self._displaced
-            if self._main_layout.indexOf(w) > old_index
-        ]) - len([
-            w for w in self._displaced
-            if self._main_layout.indexOf(w) < old_index
-        ])
+        new_index = old_index
+        for w in self._displaced:
+            if self._main_layout.indexOf(w) > old_index:
+                new_index += 1
+            else:
+                new_index -= 1
 
         print(f"moved from {old_index} to {new_index}")
         self._main_layout.removeWidget(self._selected_widget)
