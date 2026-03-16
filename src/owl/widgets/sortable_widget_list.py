@@ -71,7 +71,7 @@ class SortableWidgetList(QtWidgets.QWidget):
                 self._displaced.discard(widget)
                 self._animate_widget(widget, orig_pos)
 
-    def _animate_widget(self, widget, end_pos):
+    def _animate_widget(self, widget, end_pos, on_finished=None, duration = 300):
         if widget in self._animations:
             self._animations[widget].stop()
         anim = QtCore.QPropertyAnimation(widget, b"pos", self)
@@ -80,6 +80,8 @@ class SortableWidgetList(QtWidgets.QWidget):
         anim.setStartValue(widget.pos())
         anim.setEndValue(end_pos)
         anim.finished.connect(lambda w=widget: self._animations.pop(w, None))
+        if on_finished:
+            anim.finished.connect(on_finished)
         self._animations[widget] = anim
         anim.start()
 
@@ -89,17 +91,24 @@ class SortableWidgetList(QtWidgets.QWidget):
 
         old_index = self._main_layout.indexOf(self._selected_widget)
         new_index = old_index
+        target_pos = QtCore.QPoint(self._original_positions[self._selected_widget])
         for w in self._displaced:
+            shift = w.height() + self._main_layout.spacing()
             if self._main_layout.indexOf(w) > old_index:
                 new_index += 1
+                target_pos.setY(target_pos.y() + shift)
             else:
                 new_index -= 1
+                target_pos.setY(target_pos.y() - shift)
 
-        print(f"moved from {old_index} to {new_index}")
-        self._main_layout.removeWidget(self._selected_widget)
-        self._main_layout.insertWidget(new_index, self._selected_widget)
-
+        widget = self._selected_widget
         self._selected_widget = None
+
+        def finish_reorder():
+            self._main_layout.removeWidget(widget)
+            self._main_layout.insertWidget(new_index, widget)
+
+        self._animate_widget(widget, target_pos, on_finished=finish_reorder, duration=100)
 
     def add_widget(self, widget):
         container = owl.Background(color=owl.Color.WINDOW)
