@@ -17,6 +17,7 @@ class SortableWidgetList(QtWidgets.QWidget):
         self._widget_start_pos = QtCore.QPoint()
         self._last_pos = QtCore.QPoint()
         self._foo = False
+        self._animations = {}
 
     def mousePressEvent(self, event):
         selected_candidate = self.childAt(event.pos())
@@ -51,7 +52,7 @@ class SortableWidgetList(QtWidgets.QWidget):
         new_pos = self._widget_start_pos + delta
         self._selected_widget.move(0, new_pos.y())
 
-        delta_y = int(math.copysign(1, delta.y()))
+        delta_y = int(math.copysign(1, (cur_pos-last_pos).y()))
         print("delta y:", delta_y)
         if delta_y == 0:
             print("early return", delta_y)
@@ -77,11 +78,16 @@ class SortableWidgetList(QtWidgets.QWidget):
             print("start pos:", start_pos)
             print("end pos:", end_pos)
 
+            if widget in self._animations:
+                self._animations[widget].stop()
+
             animation = QtCore.QPropertyAnimation(widget, b"pos", self)
             animation.setDuration(300)
             animation.setEasingCurve(QtCore.QEasingCurve.InOutCubic)
             animation.setStartValue(start_pos)
             animation.setEndValue(end_pos)
+            animation.finished.connect(lambda w=widget: self._animations.pop(w, None))
+            self._animations[widget] = animation
 
             animation.start()
 
@@ -90,8 +96,9 @@ class SortableWidgetList(QtWidgets.QWidget):
     def mouseReleaseEvent(self, event):
         if not self._selected_widget:
             return
-        self._selected_widget.move(self._widget_start_pos)
+        # self._selected_widget.move(self._widget_start_pos)
         self._selected_widget = None
+        self._main_layout.update()
 
     def add_widget(self, widget):
         container = owl.Background(color=owl.Color.WINDOW)
