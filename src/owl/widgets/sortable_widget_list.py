@@ -19,9 +19,10 @@ class SortableWidgetList(QtWidgets.QWidget):
         candidate = self.childAt(event.pos())
         selected = None
         while candidate and candidate != self:
-            candidate = candidate.parent()
             if candidate.property("__owl_draggable__"):
                 selected = candidate
+                break
+            candidate = candidate.parent()
 
         if not selected:
             return
