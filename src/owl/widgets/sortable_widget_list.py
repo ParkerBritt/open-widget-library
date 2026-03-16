@@ -13,6 +13,7 @@ class SortableWidgetList(QtWidgets.QWidget):
         self._animations = {}
         self._original_positions = {}
         self._displaced = set()
+        self._displacement_threshold = 0  # 0 = border, 0.5 = center
 
     def mousePressEvent(self, event):
         candidate = self.childAt(event.pos())
@@ -50,12 +51,12 @@ class SortableWidgetList(QtWidgets.QWidget):
                 continue
             widget = self._main_layout.itemAt(i).widget()
             orig_pos = self._original_positions[widget]
-            orig_center = orig_pos.y() + widget.height() / 2
-
-            should_displace = (
-                (i > selected_index and dragged_center > orig_center) or
-                (i < selected_index and dragged_center < orig_center)
-            )
+            if i > selected_index:
+                trigger = orig_pos.y() + widget.height() * self._displacement_threshold
+                should_displace = dragged_center > trigger
+            else:
+                trigger = orig_pos.y() + widget.height() * (1 - self._displacement_threshold)
+                should_displace = dragged_center < trigger
             is_displaced = widget in self._displaced
 
             if should_displace == is_displaced:
