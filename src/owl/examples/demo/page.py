@@ -2,9 +2,7 @@ import owl
 from PySide6.QtWidgets import QApplication
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from owl.examples.demo.pages import notification_page
-
-from .pages import NotificationPage
+from .pages import NotificationPage, SortableWidgetPage
 
 
 class MainWindow(owl.Background):
@@ -30,6 +28,7 @@ class MainWindow(owl.Background):
         tabs = owl.Tabs(orientation=QtCore.Qt.Orientation.Vertical)
         card.addWidget(tabs)
         tabs.add_tab("Notification", owl.Icon("chart-area"))
+        tabs.add_tab("Sortable", owl.Icon("clapperboard"))
         tabs.add_tab("Tab", owl.Icon("square-chart-gantt"))
         tabs.add_tab("Dropdown", owl.Icon("panel-top-open"))
         tabs.add_tab("Icon", owl.Icon("image"))
@@ -42,7 +41,7 @@ class MainWindow(owl.Background):
 
         page_container = owl.Container()
         page_container.add_layout(stacked_layout)
-        page_container.setMaximumWidth(800)
+        page_container.setMaximumWidth(1200)
 
         page_background = owl.Background(color=owl.Color.WINDOW)
         # page_background.set_effect(owl.GradientCirclesBackgroundEffect())
@@ -55,8 +54,8 @@ class MainWindow(owl.Background):
 
         card2.add_widget(page_background)
 
-        notification_page = NotificationPage()
-        stacked_layout.addWidget(notification_page)
+        stacked_layout.addWidget(NotificationPage())
+        stacked_layout.addWidget(SortableWidgetPage())
         stacked_layout.addWidget(owl.Button("Tab"))
         stacked_layout.addWidget(QtWidgets.QLabel("Dropdown"))
         stacked_layout.addWidget(QtWidgets.QLabel("Icon"))

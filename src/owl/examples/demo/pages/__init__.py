@@ -1,1 +1,2 @@
 from .notification_page import NotificationPage
+from .sortable_widget_page import SortableWidgetPage
