@@ -39,6 +39,8 @@ class SortableWidgetList(QtWidgets.QWidget):
 
         self._selected_widget = selected_widget
 
+        self._selected_widget.raise_()
+
         self._start_pos = event.pos()
         self._widget_start_pos = self._selected_widget.pos()
         self._displaced = set()
@@ -77,7 +79,8 @@ class SortableWidgetList(QtWidgets.QWidget):
             if should_displace and widget not in self._displaced:
                 self._displaced.add(widget)
                 direction = -1 if i > selected_index else 1
-                end_pos = orig_pos + QtCore.QPoint(0, self._selected_widget.height() * direction)
+                offset = self._selected_widget.height() + self._main_layout.spacing()
+                end_pos = orig_pos + QtCore.QPoint(0, offset * direction)
                 self._animate_widget(widget, end_pos)
 
             elif not should_displace and widget in self._displaced:
