@@ -16,8 +16,9 @@ class SortableWidgetList(QtWidgets.QWidget):
         self._start_pos = QtCore.QPoint()
         self._widget_start_pos = QtCore.QPoint()
         self._last_pos = QtCore.QPoint()
-        self._foo = False
         self._animations = {}
+        self._original_positions = {}
+        self._displaced = set()
 
     def mousePressEvent(self, event):
         selected_candidate = self.childAt(event.pos())
@@ -37,9 +38,14 @@ class SortableWidgetList(QtWidgets.QWidget):
             return
 
         self._selected_widget = selected_widget
-            
+
         self._start_pos = event.pos()
         self._widget_start_pos = self._selected_widget.pos()
+        self._displaced = set()
+        self._original_positions = {}
+        for i in range(self._main_layout.count()):
+            w = self._main_layout.itemAt(i).widget()
+            self._original_positions[w] = w.pos()
 
     def mouseMoveEvent(self, event):
         last_pos = self._last_pos
@@ -52,46 +58,46 @@ class SortableWidgetList(QtWidgets.QWidget):
         new_pos = self._widget_start_pos + delta
         self._selected_widget.move(0, new_pos.y())
 
-        delta_y = int(math.copysign(1, (cur_pos-last_pos).y()))
-        print("delta y:", delta_y)
-        if delta_y == 0:
-            print("early return", delta_y)
-            return
+        selected_index = self._main_layout.indexOf(self._selected_widget)
+        dragged_center_y = self._selected_widget.pos().y() + self._selected_widget.height() / 2
 
-        # if self._foo:
-        #     return
-        start_index = self._main_layout.indexOf(self._selected_widget)+delta_y
-        end_index = self._main_layout.count() if delta_y > 0 else -1
-        print("start", start_index)
-        print("end", end_index)
-        min_y = min(last_pos.y(), cur_pos.y())
-        max_y = max(last_pos.y(), cur_pos.y())
-        for i in range(start_index, end_index, delta_y):
-            widget = self._main_layout.itemAt(i).widget()
-            widget_center = widget.pos().y() + widget.height() / 2
-            print(i, min_y, widget_center ,max_y)
-            if not (min_y <= widget_center <= max_y):
+        for i in range(self._main_layout.count()):
+            if i == selected_index:
                 continue
-            print("HERE!!!!!!!!!!!!!!!")
-            start_pos = widget.pos()
-            end_pos = start_pos-QtCore.QPoint(0, widget.height())*delta_y
-            print("start pos:", start_pos)
-            print("end pos:", end_pos)
+            widget = self._main_layout.itemAt(i).widget()
+            orig_pos = self._original_positions[widget]
+            orig_center_y = orig_pos.y() + widget.height() / 2
 
-            if widget in self._animations:
-                self._animations[widget].stop()
+            # Should this widget be displaced?
+            should_displace = (
+                (i > selected_index and dragged_center_y > orig_center_y) or
+                (i < selected_index and dragged_center_y < orig_center_y)
+            )
 
-            animation = QtCore.QPropertyAnimation(widget, b"pos", self)
-            animation.setDuration(300)
-            animation.setEasingCurve(QtCore.QEasingCurve.InOutCubic)
-            animation.setStartValue(start_pos)
-            animation.setEndValue(end_pos)
-            animation.finished.connect(lambda w=widget: self._animations.pop(w, None))
-            self._animations[widget] = animation
+            if should_displace and widget not in self._displaced:
+                self._displaced.add(widget)
+                direction = -1 if i > selected_index else 1
+                end_pos = orig_pos + QtCore.QPoint(0, self._selected_widget.height() * direction)
+                self._animate_widget(widget, end_pos)
 
-            animation.start()
+            elif not should_displace and widget in self._displaced:
+                self._displaced.discard(widget)
+                self._animate_widget(widget, orig_pos)
 
 
+
+    def _animate_widget(self, widget, end_pos):
+        if widget in self._animations:
+            self._animations[widget].stop()
+
+        animation = QtCore.QPropertyAnimation(widget, b"pos", self)
+        animation.setDuration(300)
+        animation.setEasingCurve(QtCore.QEasingCurve.InOutCubic)
+        animation.setStartValue(widget.pos())
+        animation.setEndValue(end_pos)
+        animation.finished.connect(lambda w=widget: self._animations.pop(w, None))
+        self._animations[widget] = animation
+        animation.start()
 
     def mouseReleaseEvent(self, event):
         if not self._selected_widget:
