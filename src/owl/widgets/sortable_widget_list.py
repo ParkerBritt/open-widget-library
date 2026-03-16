@@ -85,8 +85,21 @@ class SortableWidgetList(QtWidgets.QWidget):
     def mouseReleaseEvent(self, event):
         if not self._selected_widget:
             return
+
+        old_index = self._main_layout.indexOf(self._selected_widget)
+        new_index = old_index + len([
+            w for w in self._displaced
+            if self._main_layout.indexOf(w) > old_index
+        ]) - len([
+            w for w in self._displaced
+            if self._main_layout.indexOf(w) < old_index
+        ])
+
+        print(f"moved from {old_index} to {new_index}")
+        self._main_layout.removeWidget(self._selected_widget)
+        self._main_layout.insertWidget(new_index, self._selected_widget)
+
         self._selected_widget = None
-        self._main_layout.update()
 
     def add_widget(self, widget):
         container = owl.Background(color=owl.Color.WINDOW)
