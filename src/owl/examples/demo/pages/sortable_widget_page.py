@@ -27,7 +27,7 @@ class SortableWidgetPage(owl.Container):
         preview_background = owl.Background(color=owl.Color.WINDOW)
         self.background = preview_background
         preview_background.set_effect(owl.DotMatrixBackgroundEffect())
-        preview_background.setFixedHeight(500)
+        preview_background.setFixedHeight(400)
 
         codeblock_background = owl.Background().add_widget(owl.CodeBlock("""import owl
 
@@ -36,7 +36,7 @@ notification_button.clicked.connect(
     lambda: owl.ToastNotification(self.window(), "test").notify()
 )
 """))
-        codeblock_background.setFixedHeight(250)
+        codeblock_background.setFixedHeight(400)
 
         stacked_widget = QtWidgets.QStackedWidget()
         stacked_widget.addWidget(preview_background)
@@ -56,7 +56,7 @@ notification_button.clicked.connect(
         list_widget.add_widget(QtWidgets.QLabel("hello world 3"))
         list_widget.add_widget(QtWidgets.QLabel("hello world 4"))
 
-        widget_background = owl.Background()
+        widget_background = owl.Container()
         widget_background.setFixedSize(500,200)
         widget_background.add_widget(list_widget)
 
