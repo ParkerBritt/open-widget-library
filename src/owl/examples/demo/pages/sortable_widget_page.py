@@ -23,7 +23,6 @@ class SortableWidgetPage(owl.Container):
         tab_background.setSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Maximum)
         self.add_widget(tab_background)
 
-
         preview_background = owl.Background(color=owl.Color.WINDOW)
         self.background = preview_background
         preview_background.set_effect(owl.DotMatrixBackgroundEffect())
@@ -49,21 +48,19 @@ notification_button.clicked.connect(
             lambda: owl.ToastNotification(self.window(), "test").notify()
         )
 
-
         list_widget = owl.SortableWidgetList()
-        list_widget.add_widget(QtWidgets.QLabel("hello world 1"))
-        list_widget.add_widget(QtWidgets.QLabel("hello world 2"))
-        list_widget.add_widget(QtWidgets.QLabel("hello world 3"))
-        list_widget.add_widget(QtWidgets.QLabel("hello world 4"))
+        list_widget.add_widget(owl.Label("hello world 1"))
+        list_widget.add_widget(owl.Label("hello world 2"))
+        list_widget.add_widget(owl.Label("hello world 3"))
+        list_widget.add_widget(owl.Label("hello world 4"))
 
         widget_background = owl.Container()
-        widget_background.setFixedSize(500,200)
+        widget_background.setFixedSize(500, 200)
         widget_background.add_widget(list_widget)
 
         preview_background.add_widget(widget_background)
 
         self.add_widget(owl.Label(owl.lorem_ipsum(3)).set_text_block())
-
 
         self.set_alignment(notification_button, QtCore.Qt.AlignHCenter)
         self.add_stretch()
