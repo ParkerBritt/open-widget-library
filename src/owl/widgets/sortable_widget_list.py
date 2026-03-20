@@ -1,4 +1,5 @@
 from qtpy import QtWidgets, QtCore
+from .sortable_handle import SortableHandle
 import owl
 
 
@@ -17,20 +18,24 @@ class SortableWidgetList(QtWidgets.QWidget):
 
     def mousePressEvent(self, event):
         candidate = self.childAt(event.pos())
-        selected = None
+        selected_widget = None
+        is_handle = False
+
         while candidate and candidate != self:
             if candidate.property("__owl_draggable__"):
-                selected = candidate
+                selected_widget = candidate
                 break
+            if candidate.property("__owl_handle__"):
+                is_handle = True
             candidate = candidate.parent()
 
-        if not selected:
+        if not (selected_widget and is_handle):
             return
 
-        self._selected_widget = selected
-        selected.raise_()
+        self._selected_widget = selected_widget
+        selected_widget.raise_()
         self._start_pos = event.pos()
-        self._widget_start_pos = selected.pos()
+        self._widget_start_pos = selected_widget.pos()
         self._displaced = set()
         self._original_positions = {
             self._main_layout.itemAt(i).widget(): self._main_layout.itemAt(i).widget().pos()
@@ -113,7 +118,10 @@ class SortableWidgetList(QtWidgets.QWidget):
 
     def add_widget(self, widget):
         container = owl.Background(color=owl.Color.WINDOW)
+        container.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        container.set_layout_direction(owl.Background.TopToBottom)
         container.setProperty("__owl_draggable__", True)
+        container.add_widget(SortableHandle())
         container.add_widget(widget)
         self._main_layout.addWidget(container)
         return self

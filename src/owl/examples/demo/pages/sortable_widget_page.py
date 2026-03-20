@@ -55,7 +55,7 @@ notification_button.clicked.connect(
         list_widget.add_widget(owl.Label("hello world 4"))
 
         widget_background = owl.Container()
-        widget_background.setFixedSize(500, 200)
+        widget_background.setFixedSize(500,300)
         widget_background.add_widget(list_widget)
 
         preview_background.add_widget(widget_background)
