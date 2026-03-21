@@ -11,6 +11,7 @@ class SortableHandle(QtWidgets.QWidget):
         self.setProperty("__owl_handle__", True)
         self.setAttribute(QtCore.Qt.WA_StyledBackground)
         self.setObjectName("test")
+        self.setCursor(QtCore.Qt.OpenHandCursor)
         self.setStyleSheet("""
 #test
 {
