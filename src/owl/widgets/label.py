@@ -13,12 +13,29 @@ class Label(QtWidgets.QLabel):
     def __init__(self, text: str = "", parent: QtWidgets.QWidget = None):
         super().__init__(text, parent)
         self._heading = 0
+        self._font_multiplier = 1.0
         self._base_font_size = self.font().pointSize()
+        self._font_weight = "normal"
         self._apply_style()
 
     def set_heading(self, level: int = 0):
         """Set heading level (1-4). Use 0 for normal label."""
         self._heading = max(0, min(level, 4))
+        style = self._HEADING_STYLES[self._heading]
+        self._font_multiplier = style["scale"]
+        self._font_weight = style["font-weight"]
+        self._apply_style()
+        return self
+
+    def set_bold(self, bold: bool = True):
+        """Set font weight to bold (700) or normal."""
+        self._font_weight = "700" if bold else "normal"
+        self._apply_style()
+        return self
+
+    def set_font_scale(self, scale: float):
+        """Set font size as a multiplier of the base font size."""
+        self._font_multiplier = scale
         self._apply_style()
         return self
 
@@ -44,13 +61,11 @@ class Label(QtWidgets.QLabel):
         return self._heading
 
     def _apply_style(self):
-        style = self._HEADING_STYLES.get(self._heading, self._HEADING_STYLES[0])
-        font_size = int(self._base_font_size * style["scale"])
-        font_weight = style["font-weight"]
+        font_size = int(self._base_font_size * self._font_multiplier)
         self.setStyleSheet(f"""
 Label {{
     color: rgb(220, 220, 220);
     font-size: {font_size}pt;
-    font-weight: {font_weight};
+    font-weight: {self._font_weight};
 }}
 """)
