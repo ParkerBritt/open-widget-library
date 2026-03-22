@@ -28,12 +28,12 @@ class SortableWidgetPage(owl.Container):
         preview_background.set_effect(owl.DotMatrixBackgroundEffect())
         preview_background.setFixedHeight(400)
 
-        codeblock_background = owl.Background().add_widget(owl.CodeBlock("""import owl
+        codeblock_background = owl.Background().add_widget(owl.CodeBlock("""list_widget = owl.SortableWidgetList()
 
-notification_button = owl.Button("Test Notify").fill_width(False)
-notification_button.clicked.connect(
-    lambda: owl.ToastNotification(self.window(), "test").notify()
-)
+list_widget.add_widget(owl.Label("hello world 1"), "Heading 1")
+list_widget.add_widget(owl.Label("hello world 2"), "Heading 2")
+list_widget.add_widget(owl.Label("hello world 3"), "Heading 3")
+list_widget.add_widget(owl.Label("hello world 4"), "Heading 4")
 """))
         codeblock_background.setFixedHeight(400)
 
@@ -43,16 +43,11 @@ notification_button.clicked.connect(
         self.add_widget(stacked_widget)
         tabs.index_changed.connect(lambda index: stacked_widget.setCurrentIndex(index))
 
-        notification_button = owl.Button("Test Notify").fill_width(False)
-        notification_button.clicked.connect(
-            lambda: owl.ToastNotification(self.window(), "test").notify()
-        )
-
         list_widget = owl.SortableWidgetList()
-        list_widget.add_widget(owl.Label("hello world 1"))
-        list_widget.add_widget(owl.Label("hello world 2"))
-        list_widget.add_widget(owl.Label("hello world 3"))
-        list_widget.add_widget(owl.Label("hello world 4"))
+        list_widget.add_widget(owl.Label("hello world 1"), "Heading 1")
+        list_widget.add_widget(owl.Label("hello world 2"), "Heading 2")
+        list_widget.add_widget(owl.Label("hello world 3"), "Heading 3")
+        list_widget.add_widget(owl.Label("hello world 4"), "Heading 4")
 
         widget_background = owl.Container()
         widget_background.setFixedSize(500,300)
@@ -62,5 +57,4 @@ notification_button.clicked.connect(
 
         self.add_widget(owl.Label(owl.lorem_ipsum(3)).set_text_block())
 
-        self.set_alignment(notification_button, QtCore.Qt.AlignHCenter)
         self.add_stretch()

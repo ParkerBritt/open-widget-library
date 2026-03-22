@@ -32,6 +32,8 @@ class SortableWidgetList(QtWidgets.QWidget):
         if not (selected_widget and is_handle):
             return
 
+        QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.ClosedHandCursor)
+
         self._selected_widget = selected_widget
         selected_widget.raise_()
         self._start_pos = event.pos()
@@ -92,6 +94,8 @@ class SortableWidgetList(QtWidgets.QWidget):
         anim.start()
 
     def mouseReleaseEvent(self, event):
+        QtWidgets.QApplication.restoreOverrideCursor()
+
         if not self._selected_widget:
             return
 
@@ -116,12 +120,12 @@ class SortableWidgetList(QtWidgets.QWidget):
 
         self._animate_widget(widget, target_pos, on_finished=finish_reorder, duration=100)
 
-    def add_widget(self, widget):
+    def add_widget(self, widget, title=None):
         container = owl.Background(color=owl.Color.WINDOW)
         container.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         container.set_layout_direction(owl.Background.TopToBottom)
         container.setProperty("__owl_draggable__", True)
-        container.add_widget(SortableHandle())
+        container.add_widget(SortableHandle(title))
         container.add_widget(widget)
         self._main_layout.addWidget(container)
         return self
