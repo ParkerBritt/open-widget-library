@@ -6,3 +6,4 @@
 
 
 OWL is a library of high level python QT widgets to add functionality in a cohesive style.
+<video src=https://github.com/user-attachments/assets/0938d625-c067-4de7-a885-befc0df59aa7>
