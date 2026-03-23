@@ -69,6 +69,16 @@ class Icon(QtWidgets.QWidget):
             )
 
         self._selected = False
+        self._opacity = 1.0
+        self._opacity_effect = QtWidgets.QGraphicsOpacityEffect(self)
+        self._opacity_effect.setOpacity(self._opacity)
+        self.setGraphicsEffect(self._opacity_effect)
+
+    def set_opacity(self, opacity: float):
+        """Set icon opacity (0.0 fully transparent to 1.0 fully opaque)."""
+        self._opacity = max(0.0, min(1.0, opacity))
+        self._opacity_effect.setOpacity(self._opacity)
+        return self
 
     def set_selected(self, selected: bool = True):
         self._selected = selected
