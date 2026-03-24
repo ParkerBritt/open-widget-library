@@ -21,3 +21,4 @@ from .backdrop_blur import BackdropBlur
 from .grid_debug_background_effect import GridDebugBackgroundEffect
 from .sortable_widget_list import SortableWidgetList
 from .sortable_handle import SortableHandle
+from .slider import Slider

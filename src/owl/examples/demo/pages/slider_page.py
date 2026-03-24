@@ -43,7 +43,7 @@ list_widget.add_widget(owl.Label("hello world 4"), "Heading 4")
         self.add_widget(stacked_widget)
         tabs.index_changed.connect(lambda index: stacked_widget.setCurrentIndex(index))
 
-        slider = QtWidgets.QSlider(QtCore.Qt.Horizontal)
+        slider = owl.Slider()
 
         widget_background = owl.Container()
         widget_background.setFixedSize(500,300)
