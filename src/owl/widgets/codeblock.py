@@ -19,6 +19,5 @@ CodeBlock
 
         formatter = HtmlFormatter(noclasses=True, style="dracula", nobackground=True)
         html = highlight(formatted_text, PythonLexer(), formatter)
-        print("html", html)
 
         self.setHtml(html)
