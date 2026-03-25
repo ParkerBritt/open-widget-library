@@ -16,7 +16,7 @@ class Background(Widget):
         if not styled:
             return
 
-        self._color = "#0a0a0a" if color is Color.WINDOW else "#151515"
+        self._color = "#0a0a0a" if color is Color.WINDOW else "#131313"
         self.setAttribute(QtCore.Qt.WA_StyledBackground)
         self.setStyleSheet(f"""
 Background
