@@ -2,7 +2,7 @@ import owl
 from PySide6.QtWidgets import QApplication
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from .pages import NotificationPage, SortableWidgetPage, SliderPage
+from .pages import NotificationPage, SortableWidgetPage, SliderPage, TabsPage
 
 
 class MainWindow(owl.Background):
@@ -58,7 +58,7 @@ class MainWindow(owl.Background):
         stacked_layout.addWidget(NotificationPage())
         stacked_layout.addWidget(SortableWidgetPage())
         stacked_layout.addWidget(SliderPage())
-        stacked_layout.addWidget(owl.Button("Tab"))
+        stacked_layout.addWidget(TabsPage())
         stacked_layout.addWidget(QtWidgets.QLabel("Dropdown"))
         stacked_layout.addWidget(QtWidgets.QLabel("Icon"))
         stacked_layout.addWidget(QtWidgets.QLabel("Spinner"))
