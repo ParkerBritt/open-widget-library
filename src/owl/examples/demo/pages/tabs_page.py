@@ -27,6 +27,7 @@ class TabsPage(owl.Container):
         self.background = preview_background
         preview_background.set_effect(owl.DotMatrixBackgroundEffect())
         preview_background.setFixedHeight(250)
+        preview_background.set_alignment(QtCore.Qt.AlignCenter)
 
         codeblock_background = owl.Background().add_widget(owl.CodeBlock("""list_widget = owl.SortableWidgetList()
 
@@ -48,11 +49,7 @@ list_widget.add_widget(owl.Label("hello world 4"), "Heading 4")
         tabs.add_tab("hello")
         tabs.add_tab("world")
 
-        widget_background = owl.Container()
-        widget_background.setFixedSize(500,300)
-        widget_background.add_widget(tabs)
-
-        preview_background.add_widget(widget_background)
+        preview_background.add_widget(tabs)
 
         self.add_widget(owl.Label(owl.lorem_ipsum(3)).set_text_block())
 
