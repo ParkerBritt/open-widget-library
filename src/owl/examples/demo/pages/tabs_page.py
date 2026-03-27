@@ -31,9 +31,9 @@ class TabsPage(owl.Container):
 
         codeblock_background = owl.Background().add_widget(owl.CodeBlock(
 """tabs = owl.Tabs()
-tabs.add_tab("test")
-tabs.add_tab("hello")
-tabs.add_tab("world")
+tabs.add_tab("Menu")
+tabs.add_tab("Settings")
+tabs.add_tab("Main")
 """))
         codeblock_background.setFixedHeight(250)
 
@@ -44,9 +44,9 @@ tabs.add_tab("world")
         tabs.index_changed.connect(lambda index: stacked_widget.setCurrentIndex(index))
 
         tabs = owl.Tabs()
-        tabs.add_tab("test")
-        tabs.add_tab("hello")
-        tabs.add_tab("world")
+        tabs.add_tab("Menu")
+        tabs.add_tab("Settings")
+        tabs.add_tab("Main")
 
         preview_background.add_widget(tabs)
 
