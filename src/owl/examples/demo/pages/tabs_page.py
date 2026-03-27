@@ -29,12 +29,11 @@ class TabsPage(owl.Container):
         preview_background.setFixedHeight(250)
         preview_background.set_alignment(QtCore.Qt.AlignCenter)
 
-        codeblock_background = owl.Background().add_widget(owl.CodeBlock("""list_widget = owl.SortableWidgetList()
-
-list_widget.add_widget(owl.Label("hello world 1"), "Heading 1")
-list_widget.add_widget(owl.Label("hello world 2"), "Heading 2")
-list_widget.add_widget(owl.Label("hello world 3"), "Heading 3")
-list_widget.add_widget(owl.Label("hello world 4"), "Heading 4")
+        codeblock_background = owl.Background().add_widget(owl.CodeBlock(
+"""tabs = owl.Tabs()
+tabs.add_tab("test")
+tabs.add_tab("hello")
+tabs.add_tab("world")
 """))
         codeblock_background.setFixedHeight(250)
 
