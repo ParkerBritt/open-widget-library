@@ -4,6 +4,9 @@
   <img src="https://cards.parkerbritt.com/badge?label=qt&icon=qt&color=41CD52">
 </div>
 
+> [!WARNING]
+> This project has been discontinued as I'm unlikely to use Qt Widgets for personal projects going forward.  
+> Although I may some day look at doing a similar project for qml.
 
 OWL is a library of high level python QT widgets to add functionality in a cohesive style.
 <video src=https://github.com/user-attachments/assets/0938d625-c067-4de7-a885-befc0df59aa7>
